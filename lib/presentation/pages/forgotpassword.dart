@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:champ/presentation/colors/mycolors.dart';
+import 'package:champ/presentation/pages/otppage.dart';
 import 'package:champ/presentation/widgets/button.dart';
+import 'package:champ/presentation/widgets/emailnotification.dart';
 import 'package:champ/presentation/widgets/textbox.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,7 @@ class ForgotPassword extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           leading: Container(
+        margin: EdgeInsets.all(6),
         decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.1),
             borderRadius: BorderRadius.circular(30)),
@@ -73,55 +76,19 @@ class ForgotPassword extends StatelessWidget {
                     Button(
                       onTap: () {
                         showCupertinoModalPopup(
-                            context: context,
-                            builder: (context) => Center(
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 25, horizontal: 20),
-                                      alignment: Alignment.center,
-                                      width:
-                                          MediaQuery.of(context).size.width - 50,
-                                      height: MediaQuery.of(context).size.height -
-                                          700,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
-                                          color: Colors.white),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          SvgPicture.asset(
-                                              'assets/icon_modal.svg'),
-                                          Text(
-                                            textAlign: TextAlign.center,
-                                            'Проверьте Ваш Email',
-                                            style: GoogleFonts.raleway(
-                                              textStyle: TextStyle(
-                                                decoration: TextDecoration.none,
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            textAlign: TextAlign.center,
-                                            'Мы отправили код восстановления пароля на вашу электронную почту.',
-                                            style: GoogleFonts.raleway(
-                                              textStyle: TextStyle(
-                                                decoration: TextDecoration.none,
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ));
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) => GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (context) => const OtpPage()));
+                            },
+                            child: emailNotification(context),
+                          ),
+                        );
                       },
                       title: 'Отправить',
                       controller: null,

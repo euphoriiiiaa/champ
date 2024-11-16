@@ -18,6 +18,7 @@ class SignIn extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           leading: Container(
+        margin: EdgeInsets.all(6),
         decoration: BoxDecoration(
             color: Colors.black.withOpacity(0.1),
             borderRadius: BorderRadius.circular(30)),
@@ -116,9 +117,10 @@ class SignIn extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () {
                           Navigator.push(
-                            context,
-                            CupertinoPageRoute(builder: (context) => const ForgotPassword())
-                          );
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>
+                                      const ForgotPassword()));
                         },
                         child: Text(
                           textAlign: TextAlign.end,
