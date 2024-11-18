@@ -45,12 +45,25 @@ class _FirstPageState extends State<FirstPage> {
                 ),
               ),
             ),
-            Image.asset(
-              fit: BoxFit.cover,
-              width: 671,
-              height: 360,
-              'assets/first_onboard.png',
-            ),
+            Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 100,),
+                  child: Image.asset(
+                    alignment: Alignment.center,
+                    fit: BoxFit.cover,
+                    width: 171,
+                    'assets/sparkles.png',
+                  ),
+                ),
+                Image.asset(
+                  fit: BoxFit.cover,
+                  width: 671,
+                  height: 360,
+                  'assets/first_onboard.png',
+                ),
+              ],
+            )
           ],
         ),
       ),
