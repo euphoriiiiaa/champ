@@ -85,6 +85,7 @@ class _RegPageState extends State<RegPage> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 50,
                       child: TextBox(
+                        controller: null,
                         email: true,
                         hint: 'xxxxxxxx',
                       ),
@@ -111,6 +112,7 @@ class _RegPageState extends State<RegPage> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 50,
                       child: TextBox(
+                        controller: null,
                         email: true,
                         hint: 'xyz@gmail.com',
                       ),
@@ -137,6 +139,7 @@ class _RegPageState extends State<RegPage> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 50,
                       child: TextBox(
+                        controller: null,
                         email: false,
                         hint: '*********',
                       ),

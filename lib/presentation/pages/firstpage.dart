@@ -19,54 +19,56 @@ class _FirstPageState extends State<FirstPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [MyColors.lighterBlue, MyColors.darkerBlue],
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SizedBox(
-              width: 267,
-              child: Text(
-                textAlign: TextAlign.center,
-                'ДОБРО ПОЖАЛОВАТЬ',
-                style: GoogleFonts.raleway(
-                  textStyle: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: AssetImage('assets/sparkles2.png'),
             ),
-            Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 100,),
-                  child: Image.asset(
-                    alignment: Alignment.center,
-                    fit: BoxFit.cover,
-                    width: 171,
-                    'assets/sparkles.png',
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [MyColors.lighterBlue, MyColors.darkerBlue],
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Stack(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 30),
+                    child: Image.asset(
+                      fit: BoxFit.cover,
+                      'assets/sparkles.png',
+                      height: 110,
+                    ),
                   ),
-                ),
-                Image.asset(
-                  fit: BoxFit.cover,
-                  width: 671,
-                  height: 360,
-                  'assets/first_onboard.png',
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
+                  SizedBox(
+                    width: 267,
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      'ДОБРО ПОЖАЛОВАТЬ',
+                      style: GoogleFonts.raleway(
+                        textStyle: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Image.asset(
+                fit: BoxFit.cover,
+                width: 671,
+                height: 360,
+                'assets/first_onboard.png',
+              ),
+            ],
+          )),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:champ/functions/func.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
 import 'package:champ/presentation/pages/forgotpassword.dart';
 import 'package:champ/presentation/pages/regpage.dart';
@@ -10,9 +11,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
   const SignIn({super.key});
 
+  @override
+  State<SignIn> createState() => _SignInState();
+}
+
+TextEditingController email = TextEditingController();
+TextEditingController password = TextEditingController();
+
+class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,6 +88,7 @@ class SignIn extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 50,
                       child: TextBox(
+                        controller: email,
                         email: true,
                         hint: 'xyz@gmail.com',
                       ),
@@ -105,6 +115,7 @@ class SignIn extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 50,
                       child: TextBox(
+                        controller: password,
                         email: false,
                         hint: '*********',
                       ),
@@ -138,7 +149,9 @@ class SignIn extends StatelessWidget {
                       height: 40,
                     ),
                     Button(
-                      onTap: null,
+                      onTap: () {
+                        Func().tryToSignIn(email.text, password.text, context);
+                      },
                       title: 'Войти',
                       controller: null,
                       bgcolor: MyColors.lighterBlue,

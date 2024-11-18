@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:champ/presentation/colors/mycolors.dart';
 import 'package:champ/presentation/pages/mainpage.dart';
 import 'package:champ/presentation/widgets/button.dart';
-import 'package:champ/presentation/widgets/otp.dart';
 import 'package:champ/presentation/widgets/textbox.dart';
 import 'package:champ/presentation/widgets/timer.dart';
 import 'package:flutter/cupertino.dart';

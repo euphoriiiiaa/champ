@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:champ/api/supabase.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
 import 'package:champ/presentation/pages/firstpage.dart';
 import 'package:champ/presentation/pages/secondpage.dart';

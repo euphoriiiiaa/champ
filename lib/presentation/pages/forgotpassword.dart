@@ -66,6 +66,7 @@ class ForgotPassword extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 50,
                       child: TextBox(
+                        controller: null,
                         email: true,
                         hint: 'xyz@gmail.com',
                       ),

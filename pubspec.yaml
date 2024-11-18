@@ -52,6 +52,9 @@ dependencies:
   smooth_page_indicator: ^1.2.0+3
   flutter_svg: ^2.0.10+1
   flutter_otp_text_field: ^1.2.0
+  supabase_flutter: ^2.8.1
+  shared_preferences: ^2.3.3
+  flutter_bcrypt: ^1.0.8
 
 dev_dependencies:
   flutter_test:

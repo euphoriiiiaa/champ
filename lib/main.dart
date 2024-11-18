@@ -1,11 +1,13 @@
-import 'package:champ/presentation/pages/onboardingpage.dart';
+import 'package:champ/api/supabase.dart';
 import 'package:champ/presentation/pages/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() {
+  SupabaseInit().init();
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+  SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   runApp(const MyApp());
 }
 
