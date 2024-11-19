@@ -1,5 +1,8 @@
-import 'dart:developer';
+import 'dart:developer' as logs;
+import 'dart:math';
 
+import 'package:champ/data/data.dart';
+import 'package:champ/functions/func.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
 import 'package:champ/presentation/widgets/button.dart';
 import 'package:champ/presentation/widgets/textbox.dart';
@@ -16,6 +19,9 @@ class RegPage extends StatefulWidget {
 }
 
 bool isChecked = false;
+TextEditingController email = TextEditingController();
+TextEditingController password = TextEditingController();
+TextEditingController name = TextEditingController();
 
 class _RegPageState extends State<RegPage> {
   @override
@@ -85,7 +91,7 @@ class _RegPageState extends State<RegPage> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 50,
                       child: TextBox(
-                        controller: null,
+                        controller: name,
                         email: true,
                         hint: 'xxxxxxxx',
                       ),
@@ -112,7 +118,7 @@ class _RegPageState extends State<RegPage> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 50,
                       child: TextBox(
-                        controller: null,
+                        controller: email,
                         email: true,
                         hint: 'xyz@gmail.com',
                       ),
@@ -139,7 +145,7 @@ class _RegPageState extends State<RegPage> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 50,
                       child: TextBox(
-                        controller: null,
+                        controller: password,
                         email: false,
                         hint: '*********',
                       ),
@@ -152,24 +158,30 @@ class _RegPageState extends State<RegPage> {
                       child: Row(
                         children: [
                           Checkbox(
-                            shape: CircleBorder(),
+                            shape: const CircleBorder(),
                             value: isChecked,
                             onChanged: (asd) {
                               setState(() {
                                 isChecked = !isChecked;
+                                Data.isChecked = isChecked;
                               });
                             },
                           ),
                           SizedBox(
                             width: MediaQuery.of(context).size.width - 150,
-                            child: Text(
-                              textAlign: TextAlign.start,
-                              'Даю согласие на обработку персональных данных',
-                              style: GoogleFonts.raleway(
-                                textStyle: TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
+                            child: GestureDetector(
+                              onTap: () {
+                                Func().launchPdf(context);
+                              },
+                              child: Text(
+                                textAlign: TextAlign.start,
+                                'Даю согласие на обработку персональных данных',
+                                style: GoogleFonts.raleway(
+                                  textStyle: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             ),
@@ -181,7 +193,8 @@ class _RegPageState extends State<RegPage> {
                       height: 20,
                     ),
                     Button(
-                      onTap: null,
+                      onTap: () => Func().tryToRegUser(
+                          email.text, password.text, name.text, context),
                       title: 'Зарегистрироваться',
                       controller: null,
                       bgcolor: MyColors.lighterBlue,
@@ -213,7 +226,6 @@ class _RegPageState extends State<RegPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        log('asd');
                         Navigator.pop(context);
                       },
                       child: Text(

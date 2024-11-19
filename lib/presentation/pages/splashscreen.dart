@@ -1,3 +1,4 @@
+import 'package:champ/presentation/pages/mainpageview.dart';
 import 'package:champ/presentation/pages/onboardingpage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(seconds: 2));
     // ignore: use_build_context_synchronously
     Navigator.push(context,
-        CupertinoPageRoute(builder: (context) => const OnboardingPage()));
+        CupertinoPageRoute(builder: (context) => const MainPageView()));
   }
 
   @override

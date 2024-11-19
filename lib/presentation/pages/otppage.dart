@@ -1,7 +1,9 @@
+import 'dart:developer';
 import 'dart:ui';
 
+import 'package:champ/data/data.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
-import 'package:champ/presentation/pages/mainpage.dart';
+import 'package:champ/presentation/pages/mainpageview.dart';
 import 'package:champ/presentation/widgets/button.dart';
 import 'package:champ/presentation/widgets/textbox.dart';
 import 'package:champ/presentation/widgets/timer.dart';
@@ -18,6 +20,8 @@ class OtpPage extends StatefulWidget {
   @override
   State<OtpPage> createState() => _OtpPageState();
 }
+
+TextEditingController otp = TextEditingController();
 
 class _OtpPageState extends State<OtpPage> {
   @override
@@ -84,6 +88,18 @@ class _OtpPageState extends State<OtpPage> {
               SizedBox(
                 width: MediaQuery.of(context).size.width - 50,
                 child: OtpTextField(
+                  handleControllers: (controllers) => otp,
+                  onSubmit: (value) {
+                    if (value.toUpperCase() == Data.otpCode) {
+                      log('success');
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) => const MainPageView()));
+                    } else {
+                      log('wrong code');
+                    }
+                  },
                   filled: true,
                   fillColor: Colors.black.withOpacity(0.05),
                   borderWidth: 0,
@@ -126,7 +142,7 @@ class _OtpPageState extends State<OtpPage> {
                     Navigator.push(
                         context,
                         CupertinoPageRoute(
-                            builder: (context) => const MainPage()));
+                            builder: (context) => const MainPageView()));
                   }),
             ],
           ),

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:champ/functions/func.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
 import 'package:champ/presentation/pages/otppage.dart';
 import 'package:champ/presentation/widgets/button.dart';
@@ -11,9 +12,16 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class ForgotPassword extends StatelessWidget {
+class ForgotPassword extends StatefulWidget {
   const ForgotPassword({super.key});
 
+  @override
+  State<ForgotPassword> createState() => _ForgotPasswordState();
+}
+
+TextEditingController email = TextEditingController();
+
+class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +74,7 @@ class ForgotPassword extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 50,
                       child: TextBox(
-                        controller: null,
+                        controller: email,
                         email: true,
                         hint: 'xyz@gmail.com',
                       ),
@@ -76,20 +84,7 @@ class ForgotPassword extends StatelessWidget {
                     ),
                     Button(
                       onTap: () {
-                        showCupertinoModalPopup(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (context) => GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                  context,
-                                  CupertinoPageRoute(
-                                      builder: (context) => const OtpPage()));
-                            },
-                            child: emailNotification(context),
-                          ),
-                        );
+                        Func().tryToResetPassword(email.text, context);
                       },
                       title: 'Отправить',
                       controller: null,
