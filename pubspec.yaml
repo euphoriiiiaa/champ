@@ -60,6 +60,8 @@ dependencies:
   path_provider: ^2.1.5
   flutter_email_sender: ^6.0.3
   mailer: ^6.2.0
+  syncfusion_flutter_barcodes: ^27.2.2
+  native_shared_preferences: ^2.0.10
 
 dev_dependencies:
   flutter_test:

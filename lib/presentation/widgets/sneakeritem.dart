@@ -8,11 +8,18 @@ import 'package:google_fonts/google_fonts.dart';
 
 class SneakerItem extends StatefulWidget {
   const SneakerItem(
-      {super.key, required this.name, required this.price, required this.uuid});
+      {super.key,
+      required this.name,
+      required this.price,
+      required this.uuid,
+      required this.height,
+      required this.width});
 
   final String name;
   final double price;
   final String uuid;
+  final double height;
+  final double width;
 
   @override
   State<SneakerItem> createState() => _SneakerItemState();
@@ -30,11 +37,8 @@ class _SneakerItemState extends State<SneakerItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 10, left: 20),
+      padding: EdgeInsets.only(top: 10, left: 10),
       child: Container(
-        alignment: Alignment.centerLeft,
-        width: 160,
-        height: 200,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: Colors.white,
@@ -47,7 +51,9 @@ class _SneakerItemState extends State<SneakerItem> {
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data == null) {
-              return Center(child: Text('No image available'));
+              return Center(
+                child: Text('No image available'),
+              );
             } else {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -60,11 +66,17 @@ class _SneakerItemState extends State<SneakerItem> {
                       ),
                     ],
                   ),
-                  Image.memory(
-                    snapshot.data!,
-                    fit: BoxFit.cover,
+                  Expanded(
+                    child: SizedBox(
+                      width: widget.width,
+                      child: Image.memory(
+                        snapshot.data!,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
@@ -101,10 +113,11 @@ class _SneakerItemState extends State<SneakerItem> {
                     ],
                   ),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 10, bottom: 10),
+                        padding: const EdgeInsets.only(left: 10, bottom: 20),
                         child: Text(
                           '₽ ${widget.price}',
                           textAlign: TextAlign.start,

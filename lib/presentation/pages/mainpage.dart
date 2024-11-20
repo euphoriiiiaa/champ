@@ -4,24 +4,40 @@ import 'package:champ/functions/func.dart';
 import 'package:champ/models/categorymodel.dart';
 import 'package:champ/models/sneakermodel.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
+import 'package:champ/presentation/pages/popularpage.dart';
+import 'package:champ/presentation/pages/searchpage.dart';
 import 'package:champ/presentation/widgets/navbar.dart';
 import 'package:champ/presentation/widgets/sneakeritem.dart';
 import 'package:champ/presentation/widgets/tile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 Widget mainPage(BuildContext context) {
-  var mainpage = Scaffold(
+  return Scaffold(
     backgroundColor: Color(0xfff7f7f9),
     appBar: AppBar(
-      toolbarOpacity: 0,
-      backgroundColor: Color(0xfff7f7f9),
-      title: Image.asset(
-        width: 141,
-        height: 46,
-        fit: BoxFit.cover,
-        'assets/title.png',
+      forceMaterialTransparency: true,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 30),
+            child: SvgPicture.asset('assets/title.svg'),
+          ),
+          Text(
+            'Главная',
+            textAlign: TextAlign.start,
+            style: GoogleFonts.raleway(
+              textStyle: const TextStyle(
+                color: Colors.black,
+                fontSize: 34,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
       ),
       actions: [
         IconButton(
@@ -46,10 +62,17 @@ Widget mainPage(BuildContext context) {
               children: [
                 Expanded(
                   child: Material(
-                    elevation: 10,
+                    elevation: 3,
                     shadowColor: Colors.black.withOpacity(0.4),
                     borderRadius: BorderRadiusDirectional.circular(20),
                     child: TextField(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                                builder: (context) => const Searchpage()));
+                      },
+                      readOnly: true,
                       decoration: InputDecoration(
                         hintStyle: TextStyle(color: Colors.grey[400]),
                         hintText: 'Поиск',
@@ -71,6 +94,7 @@ Widget mainPage(BuildContext context) {
                     log('clicked');
                   },
                   child: Container(
+                    padding: EdgeInsets.all(16),
                     width: 52,
                     height: 52,
                     decoration: BoxDecoration(
@@ -78,7 +102,6 @@ Widget mainPage(BuildContext context) {
                       color: const Color(0xff48B2E7),
                     ),
                     child: SvgPicture.asset(
-                      height: 30,
                       'assets/sliders.svg',
                     ),
                   ),
@@ -142,7 +165,12 @@ Widget mainPage(BuildContext context) {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (context) => const PopularPage()));
+                  },
                   child: Text(
                     'Все',
                     textAlign: TextAlign.start,
@@ -173,10 +201,15 @@ Widget mainPage(BuildContext context) {
                     return ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: sneakersList.length,
-                      itemBuilder: (context, index) => SneakerItem(
-                        name: sneakersList[index].name,
-                        price: sneakersList[index].price,
-                        uuid: sneakersList[index].id,
+                      itemBuilder: (context, index) => SizedBox(
+                        width: 170,
+                        child: SneakerItem(
+                          height: 50,
+                          width: 200,
+                          name: sneakersList[index].name,
+                          price: sneakersList[index].price,
+                          uuid: sneakersList[index].id,
+                        ),
                       ),
                     );
                   }
@@ -269,6 +302,4 @@ Widget mainPage(BuildContext context) {
       ),
     ),
   );
-
-  return mainpage;
 }

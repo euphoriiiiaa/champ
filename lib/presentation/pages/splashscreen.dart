@@ -2,6 +2,7 @@ import 'package:champ/presentation/pages/mainpageview.dart';
 import 'package:champ/presentation/pages/onboardingpage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -26,21 +27,24 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/splash.png'),
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(statusBarColor: Colors.black),
+      child: Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/splash.png'),
+            ),
           ),
-        ),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Center(
-          child: Image.asset(
-            width: 331,
-            height: 76,
-            fit: BoxFit.cover,
-            'assets/splash_logo.png',
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Center(
+            child: Image.asset(
+              width: 331,
+              height: 76,
+              fit: BoxFit.cover,
+              'assets/splash_logo.png',
+            ),
           ),
         ),
       ),
