@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 Widget emailNotification(BuildContext context) {
-  var emailNotification = Center(
+  return Center(
     child: BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
       child: Container(
@@ -48,6 +48,4 @@ Widget emailNotification(BuildContext context) {
       ),
     ),
   );
-
-  return emailNotification;
 }

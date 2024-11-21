@@ -2,12 +2,13 @@ import 'package:champ/api/supabase.dart';
 import 'package:champ/presentation/pages/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 late final ValueNotifier<int> notifier;
 
 void main() async {
   SupabaseInit().init();
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

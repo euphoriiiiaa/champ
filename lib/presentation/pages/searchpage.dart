@@ -1,7 +1,10 @@
 import 'dart:developer';
 
 import 'package:champ/functions/func.dart';
+import 'package:champ/models/sneakermodel.dart';
 import 'package:champ/presentation/widgets/searchhistorymanager.dart';
+import 'package:champ/presentation/widgets/searchsneakers.dart';
+import 'package:champ/presentation/widgets/sneakeritem.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -79,6 +82,13 @@ class _SearchpageState extends State<Searchpage> {
               onSubmitted: (value) {
                 setState(() {
                   history.add(value);
+                  searchController.clear();
+                });
+              },
+              onChanged: (value) {
+                setState(() {
+                  searchController.text = value;
+                  log(searchController.text);
                 });
               },
               controller: searchController,
@@ -107,34 +117,58 @@ class _SearchpageState extends State<Searchpage> {
                     borderSide: BorderSide.none),
               ),
             ),
-            Expanded(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width - 50,
-                child: ListView.builder(
-                  itemCount: history.length,
-                  itemBuilder: (context, index) => history[index].isEmpty
-                      ? SizedBox()
-                      : Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(20)),
-                            child: ListTile(
-                              onTap: () {
-                                setState(() {
-                                  history.removeAt(index);
-                                });
-                              },
-                              title: Text(
-                                history[index],
-                              ),
-                            ),
-                          ),
+            searchController.text.isEmpty
+                ? Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 30),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width - 50,
+                        child: ListView.builder(
+                          itemCount: history.length,
+                          itemBuilder: (context, index) => history[index]
+                                  .isEmpty
+                              ? const SizedBox()
+                              : GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      history.removeAt(index);
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        child: Row(
+                                          children: [
+                                            SvgPicture.asset(
+                                                'assets/time_icon.svg'),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              history[index],
+                                              textAlign: TextAlign.start,
+                                              style: GoogleFonts.raleway(
+                                                textStyle: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )),
+                                  ),
+                                ),
                         ),
-                ),
-              ),
-            )
+                      ),
+                    ),
+                  )
+                : SearchSneakers(
+                    searchText: searchController.text,
+                  )
           ],
         ),
       ),

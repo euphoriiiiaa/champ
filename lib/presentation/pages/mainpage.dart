@@ -1,11 +1,13 @@
 import 'dart:developer';
 
 import 'package:champ/functions/func.dart';
+import 'package:champ/models/adsmodel.dart';
 import 'package:champ/models/categorymodel.dart';
 import 'package:champ/models/sneakermodel.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
 import 'package:champ/presentation/pages/popularpage.dart';
 import 'package:champ/presentation/pages/searchpage.dart';
+import 'package:champ/presentation/widgets/adwidget.dart';
 import 'package:champ/presentation/widgets/navbar.dart';
 import 'package:champ/presentation/widgets/sneakeritem.dart';
 import 'package:champ/presentation/widgets/tile.dart';
@@ -188,7 +190,7 @@ Widget mainPage(BuildContext context) {
             SizedBox(
               height: MediaQuery.of(context).size.height - 700,
               child: FutureBuilder(
-                future: Func().getSneakers(),
+                future: Func().getPopularSneakers(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
@@ -251,52 +253,30 @@ Widget mainPage(BuildContext context) {
             SizedBox(
               height: 10,
             ),
-            Container(
-              alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width - 50,
-              height: MediaQuery.of(context).size.height - 820,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
+            SizedBox(
+              height: 100,
+              child: FutureBuilder<List<AdsModel>>(
+                future: Func().getAds(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('No ads found.'));
+                  } else {
+                    List<AdsModel> ads = snapshot.data!;
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: ads.length,
+                      itemBuilder: (context, index) {
+                        return AdWidget(uuid: ads[index].id);
+                      },
+                    );
+                  }
+                },
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Summer Sale',
-                        style: GoogleFonts.raleway(
-                          textStyle: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        '15% OFF',
-                        style: GoogleFonts.raleway(
-                          textStyle: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Image.asset(
-                    'assets/splash_logo.png',
-                    color: Colors.black,
-                    fit: BoxFit.contain,
-                    width: 150,
-                    height: 200,
-                  )
-                ],
-              ),
-            )
+            ),
           ],
         ),
       ),

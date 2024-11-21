@@ -1,17 +1,20 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class TextBox extends StatefulWidget {
   const TextBox(
       {super.key,
       required this.email,
       required this.hint,
-      required this.controller});
+      required this.controller,
+      required this.onSubmit});
 
   final bool email;
   final String hint;
   final TextEditingController? controller;
+  final Function(String)? onSubmit;
   @override
   State<TextBox> createState() => _TextBoxState();
 }
@@ -24,6 +27,10 @@ class _TextBoxState extends State<TextBox> {
     return TextField(
         controller: widget.controller,
         obscureText: widget.email ? false : isRevealed,
+        onSubmitted: widget.onSubmit,
+        // inputFormatters: widget.email
+        //     ? [FilteringTextInputFormatter.allow(RegExp(r'[a-zа-я]'))]
+        //     : null,
         keyboardType: widget.email
             ? TextInputType.emailAddress
             : TextInputType.visiblePassword,

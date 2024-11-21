@@ -6,14 +6,14 @@ class NotificationModel {
   final String header;
   final String body;
   final DateTime created_at;
-  final String uuid;
+  final String user;
   final bool readed;
   NotificationModel({
     required this.id,
     required this.header,
     required this.body,
     required this.created_at,
-    required this.uuid,
+    required this.user,
     required this.readed,
   });
 
@@ -22,7 +22,7 @@ class NotificationModel {
     String? header,
     String? body,
     DateTime? created_at,
-    String? uuid,
+    String? user,
     bool? readed,
   }) {
     return NotificationModel(
@@ -30,7 +30,7 @@ class NotificationModel {
       header: header ?? this.header,
       body: body ?? this.body,
       created_at: created_at ?? this.created_at,
-      uuid: uuid ?? this.uuid,
+      user: user ?? this.user,
       readed: readed ?? this.readed,
     );
   }
@@ -41,7 +41,7 @@ class NotificationModel {
       'header': header,
       'body': body,
       'created_at': created_at.millisecondsSinceEpoch,
-      'uuid': uuid,
+      'user': user,
       'readed': readed,
     };
   }
@@ -51,8 +51,8 @@ class NotificationModel {
       id: map['id'] as int,
       header: map['header'] as String,
       body: map['body'] as String,
-      created_at: DateTime.parse(map['created_at']),
-      uuid: map['uuid'] as String,
+      created_at: DateTime.parse(map['created_at'] as String),
+      user: map['user'] as String,
       readed: map['readed'] as bool,
     );
   }
@@ -64,7 +64,7 @@ class NotificationModel {
 
   @override
   String toString() {
-    return 'NotificationModel(id: $id, header: $header, body: $body, created_at: $created_at, uuid: $uuid, readed: $readed)';
+    return 'NotificationModel(id: $id, header: $header, body: $body, created_at: $created_at, user: $user, readed: $readed)';
   }
 
   @override
@@ -75,7 +75,7 @@ class NotificationModel {
         other.header == header &&
         other.body == body &&
         other.created_at == created_at &&
-        other.uuid == uuid &&
+        other.user == user &&
         other.readed == readed;
   }
 
@@ -85,7 +85,7 @@ class NotificationModel {
         header.hashCode ^
         body.hashCode ^
         created_at.hashCode ^
-        uuid.hashCode ^
+        user.hashCode ^
         readed.hashCode;
   }
 }

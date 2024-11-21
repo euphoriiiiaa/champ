@@ -147,7 +147,7 @@ class _AccountPageState extends State<AccountPage> {
                         child: SfBarcodeGenerator(
                             barColor: Colors.black,
                             symbology: Code128B(),
-                            value: '12312311231'),
+                            value: '123121123233'),
                       ),
                       SizedBox(
                         height: 10,

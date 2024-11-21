@@ -58,7 +58,7 @@ class _PopularPageState extends State<PopularPage> {
         body: SizedBox(
           width: MediaQuery.of(context).size.width - 10,
           child: FutureBuilder(
-              future: Func().getSneakers(),
+              future: Func().getPopularSneakers(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());

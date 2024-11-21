@@ -23,6 +23,13 @@ TextEditingController password = TextEditingController();
 
 class _SignInState extends State<SignIn> {
   @override
+  void dispose() {
+    email.clear();
+    password.clear();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -89,6 +96,7 @@ class _SignInState extends State<SignIn> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 50,
                       child: TextBox(
+                        onSubmit: null,
                         controller: email,
                         email: true,
                         hint: 'xyz@gmail.com',
@@ -116,6 +124,7 @@ class _SignInState extends State<SignIn> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 50,
                       child: TextBox(
+                        onSubmit: null,
                         controller: password,
                         email: false,
                         hint: '*********',

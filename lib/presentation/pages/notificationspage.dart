@@ -3,20 +3,31 @@ import 'package:champ/models/notificationmodel.dart';
 import 'package:champ/models/sneakermodel.dart';
 import 'package:champ/presentation/widgets/notificationitem.dart';
 import 'package:champ/presentation/widgets/sneakeritem.dart';
+import 'package:champ/riverpod/notificationsprovider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
-class NotificationsPage extends StatefulWidget {
+class NotificationsPage extends ConsumerStatefulWidget {
   const NotificationsPage({super.key});
 
   @override
-  State<NotificationsPage> createState() => _NotificationsPageState();
+  ConsumerState<NotificationsPage> createState() => _NotificationsPageState();
 }
 
-class _NotificationsPageState extends State<NotificationsPage> {
+class _NotificationsPageState extends ConsumerState<NotificationsPage> {
   @override
   Widget build(BuildContext context) {
+    final refresh = ref.watch(notificationsProvider);
+
+    if (refresh) {
+      Future.delayed(Duration(seconds: 4), () {
+        ref.read(notificationsProvider.notifier).state = false;
+        setState(() {});
+      });
+    }
     return Scaffold(
         backgroundColor: Color(0xfff7f7f9),
         appBar: AppBar(
@@ -56,19 +67,25 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return Center(child: Text('No notifications found.'));
                 } else {
-                  List<NotificationModel> sneakers = snapshot.data!;
-                  return GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      childAspectRatio: 0.8,
-                      crossAxisCount: 2,
-                    ),
+                  List<NotificationModel> notifications = snapshot.data!;
+                  return ListView.builder(
                     scrollDirection: Axis.vertical,
-                    itemCount: sneakers.length,
+                    itemCount: notifications.length,
                     itemBuilder: (context, index) {
-                      return NotificationItem(
-                        header: sneakers[index].header,
-                        body: '',
-                        created_at: DateTime.now(),
+                      return VisibilityDetector(
+                        onVisibilityChanged: (info) {
+                          if (info.visibleFraction > 0.7 &&
+                              notifications[index].readed == false) {
+                            Func().startReadTimer(notifications[index], ref);
+                          }
+                        },
+                        key: Key(notifications[index].id.toString()),
+                        child: NotificationItem(
+                          readed: notifications[index].readed,
+                          header: notifications[index].header,
+                          body: notifications[index].body,
+                          created_at: DateTime.now(),
+                        ),
                       );
                     },
                   );

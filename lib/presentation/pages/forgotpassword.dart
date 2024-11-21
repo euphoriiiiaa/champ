@@ -74,6 +74,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 50,
                       child: TextBox(
+                        onSubmit: null,
                         controller: email,
                         email: true,
                         hint: 'xyz@gmail.com',
