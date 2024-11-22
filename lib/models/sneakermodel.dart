@@ -6,14 +6,18 @@ class SneakerModel {
   final String id;
   final String name;
   final double price;
-  final int category;
-  final String description;
+  final int? category;
+  final String? description;
+  final bool? bestseller;
+  final String? fullname;
   SneakerModel({
     required this.id,
     required this.name,
     required this.price,
     required this.category,
     required this.description,
+    required this.bestseller,
+    required this.fullname,
   });
 
   SneakerModel copyWith({
@@ -22,6 +26,8 @@ class SneakerModel {
     double? price,
     int? category,
     String? description,
+    bool? bestseller,
+    String? fullname,
   }) {
     return SneakerModel(
       id: id ?? this.id,
@@ -29,6 +35,8 @@ class SneakerModel {
       price: price ?? this.price,
       category: category ?? this.category,
       description: description ?? this.description,
+      bestseller: bestseller ?? this.bestseller,
+      fullname: fullname ?? this.fullname,
     );
   }
 
@@ -39,6 +47,8 @@ class SneakerModel {
       'price': price,
       'category': category,
       'description': description,
+      'bestseller': bestseller,
+      'fullname': fullname,
     };
   }
 
@@ -49,6 +59,8 @@ class SneakerModel {
       price: double.parse(map['price'].toString()),
       category: map['category'] as int,
       description: map['description'] as String,
+      bestseller: map['bestseller'] as bool,
+      fullname: map['fullname'] as String,
     );
   }
 
@@ -59,7 +71,7 @@ class SneakerModel {
 
   @override
   String toString() {
-    return 'SneakerModel(id: $id, name: $name, price: $price, category: $category, description: $description)';
+    return 'SneakerModel(id: $id, name: $name, price: $price, category: $category, description: $description, bestseller: $bestseller, fullname: $fullname)';
   }
 
   @override
@@ -70,7 +82,9 @@ class SneakerModel {
         other.name == name &&
         other.price == price &&
         other.category == category &&
-        other.description == description;
+        other.description == description &&
+        other.bestseller == bestseller &&
+        other.fullname == fullname;
   }
 
   @override
@@ -79,6 +93,8 @@ class SneakerModel {
         name.hashCode ^
         price.hashCode ^
         category.hashCode ^
-        description.hashCode;
+        description.hashCode ^
+        bestseller.hashCode ^
+        fullname.hashCode;
   }
 }

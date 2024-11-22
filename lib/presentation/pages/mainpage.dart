@@ -7,6 +7,7 @@ import 'package:champ/models/sneakermodel.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
 import 'package:champ/presentation/pages/popularpage.dart';
 import 'package:champ/presentation/pages/searchpage.dart';
+import 'package:champ/presentation/textstyle.dart';
 import 'package:champ/presentation/widgets/adwidget.dart';
 import 'package:champ/presentation/widgets/navbar.dart';
 import 'package:champ/presentation/widgets/sneakeritem.dart';
@@ -18,8 +19,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 Widget mainPage(BuildContext context) {
   return Scaffold(
-    backgroundColor: Color(0xfff7f7f9),
+    backgroundColor: MyColors.background,
     appBar: AppBar(
+      centerTitle: true,
       forceMaterialTransparency: true,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -28,17 +30,9 @@ Widget mainPage(BuildContext context) {
             padding: const EdgeInsets.only(bottom: 30),
             child: SvgPicture.asset('assets/title.svg'),
           ),
-          Text(
-            'Главная',
-            textAlign: TextAlign.start,
-            style: GoogleFonts.raleway(
-              textStyle: const TextStyle(
-                color: Colors.black,
-                fontSize: 34,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+          Text('Главная',
+              textAlign: TextAlign.start,
+              style: myTextStyle(32, MyColors.text, null)),
         ],
       ),
       actions: [
@@ -76,7 +70,7 @@ Widget mainPage(BuildContext context) {
                       },
                       readOnly: true,
                       decoration: InputDecoration(
-                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        hintStyle: myTextStyle(12, MyColors.hint, null),
                         hintText: 'Поиск',
                         fillColor: Colors.white,
                         filled: true,
@@ -118,12 +112,7 @@ Widget mainPage(BuildContext context) {
               child: Text(
                 'Категории',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.raleway(
-                  textStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                style: myTextStyle(16, MyColors.text, null),
               ),
             ),
             SizedBox(
@@ -159,12 +148,7 @@ Widget mainPage(BuildContext context) {
                 Text(
                   'Популярные',
                   textAlign: TextAlign.start,
-                  style: GoogleFonts.raleway(
-                    textStyle: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  style: myTextStyle(16, MyColors.text, null),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -176,13 +160,7 @@ Widget mainPage(BuildContext context) {
                   child: Text(
                     'Все',
                     textAlign: TextAlign.start,
-                    style: GoogleFonts.raleway(
-                      textStyle: TextStyle(
-                        color: MyColors.lighterBlue,
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
+                    style: myTextStyle(16, MyColors.accent, null),
                   ),
                 ),
               ],
@@ -204,13 +182,18 @@ Widget mainPage(BuildContext context) {
                       scrollDirection: Axis.horizontal,
                       itemCount: sneakersList.length,
                       itemBuilder: (context, index) => SizedBox(
-                        width: 170,
+                        width: 160,
+                        height: 182,
                         child: SneakerItem(
-                          height: 50,
+                          fullname: null,
+                          bestseller: null,
+                          description: null,
+                          category: null,
+                          height: 200,
                           width: 200,
                           name: sneakersList[index].name,
                           price: sneakersList[index].price,
-                          uuid: sneakersList[index].id,
+                          id: sneakersList[index].id,
                         ),
                       ),
                     );
@@ -227,25 +210,14 @@ Widget mainPage(BuildContext context) {
                 Text(
                   'Акции',
                   textAlign: TextAlign.start,
-                  style: GoogleFonts.raleway(
-                    textStyle: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  style: myTextStyle(16, MyColors.text, null),
                 ),
                 GestureDetector(
                   onTap: () {},
                   child: Text(
                     'Все',
                     textAlign: TextAlign.start,
-                    style: GoogleFonts.raleway(
-                      textStyle: TextStyle(
-                        color: MyColors.lighterBlue,
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
+                    style: myTextStyle(16, MyColors.accent, null),
                   ),
                 ),
               ],

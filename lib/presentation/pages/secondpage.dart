@@ -1,5 +1,6 @@
 import 'package:champ/presentation/colors/mycolors.dart';
 import 'package:champ/presentation/pages/onboardingpage.dart';
+import 'package:champ/presentation/textstyle.dart';
 import 'package:champ/presentation/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,7 +25,7 @@ class _SecondPageState extends State<SecondPage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [MyColors.lighterBlue, MyColors.darkerBlue],
+            colors: [MyColors.accent, MyColors.darkerBlue],
           ),
         ),
         child: Column(
@@ -39,30 +40,16 @@ class _SecondPageState extends State<SecondPage> {
             SizedBox(
               width: 267,
               child: Text(
-                textAlign: TextAlign.center,
-                'Начнем путешествие',
-                style: GoogleFonts.raleway(
-                  textStyle: TextStyle(
-                    fontSize: 34,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+                  textAlign: TextAlign.center,
+                  'Начнем путешествие',
+                  style: myTextStyle(34, Colors.white, null)),
             ),
             SizedBox(
               width: 267,
               child: Text(
-                textAlign: TextAlign.center,
-                'Умная, великолепная и модная коллекция Изучите сейчас',
-                style: GoogleFonts.raleway(
-                  textStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+                  textAlign: TextAlign.center,
+                  'Умная, великолепная и модная коллекция Изучите сейчас',
+                  style: myTextStyle(20, Colors.white, null)),
             ),
           ],
         ),

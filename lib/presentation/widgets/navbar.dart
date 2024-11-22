@@ -1,4 +1,5 @@
 import 'package:champ/presentation/colors/mycolors.dart';
+import 'package:champ/presentation/pages/cartpage.dart';
 import 'package:champ/presentation/pages/mainpageview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class _NavBarState extends State<NavBar> {
       children: [
         Image.asset(
           'assets/navbar_background.png',
-          fit: BoxFit.contain,
+          fit: BoxFit.cover,
           width: MediaQuery.of(context).size.width,
         ),
         Padding(
@@ -44,9 +45,8 @@ class _NavBarState extends State<NavBar> {
                         });
                       },
                       child: Image.asset(
-                        color: (widget.currentPage == 0)
-                            ? MyColors.lighterBlue
-                            : null,
+                        color:
+                            (widget.currentPage == 0) ? MyColors.accent : null,
                         'assets/home.png',
                         height: 24,
                         width: 22,
@@ -59,9 +59,8 @@ class _NavBarState extends State<NavBar> {
                         });
                       },
                       child: Image.asset(
-                        color: (widget.currentPage == 1)
-                            ? MyColors.lighterBlue
-                            : null,
+                        color:
+                            (widget.currentPage == 1) ? MyColors.accent : null,
                         'assets/heartt.png',
                         height: 24,
                         width: 22,
@@ -82,9 +81,8 @@ class _NavBarState extends State<NavBar> {
                         });
                       },
                       child: Image.asset(
-                        color: (widget.currentPage == 2)
-                            ? MyColors.lighterBlue
-                            : null,
+                        color:
+                            (widget.currentPage == 2) ? MyColors.accent : null,
                         'assets/notification.png',
                         height: 24,
                         width: 22,
@@ -97,9 +95,8 @@ class _NavBarState extends State<NavBar> {
                         });
                       },
                       child: Image.asset(
-                        color: (widget.currentPage == 3)
-                            ? MyColors.lighterBlue
-                            : null,
+                        color:
+                            (widget.currentPage == 3) ? MyColors.accent : null,
                         'assets/person.png',
                         height: 24,
                         width: 22,
@@ -114,10 +111,16 @@ class _NavBarState extends State<NavBar> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              width: 110,
-              height: 110,
-              'assets/navbar_carticon.png',
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    CupertinoPageRoute(builder: (context) => const CartPage()));
+              },
+              child: Image.asset(
+                width: 110,
+                height: 110,
+                'assets/navbar_carticon.png',
+              ),
             ),
           ],
         )

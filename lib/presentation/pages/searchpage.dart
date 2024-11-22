@@ -2,6 +2,9 @@ import 'dart:developer';
 
 import 'package:champ/functions/func.dart';
 import 'package:champ/models/sneakermodel.dart';
+import 'package:champ/presentation/colors/mycolors.dart';
+import 'package:champ/presentation/textstyle.dart';
+import 'package:champ/presentation/widgets/arrowicon.dart';
 import 'package:champ/presentation/widgets/searchhistorymanager.dart';
 import 'package:champ/presentation/widgets/searchsneakers.dart';
 import 'package:champ/presentation/widgets/sneakeritem.dart';
@@ -50,18 +53,11 @@ class _SearchpageState extends State<Searchpage> {
     return Scaffold(
       backgroundColor: Color(0xfff7f7f9),
       appBar: AppBar(
+        centerTitle: true,
         forceMaterialTransparency: true,
-        title: Text(
-          'Поиск',
-          textAlign: TextAlign.start,
-          style: GoogleFonts.raleway(
-            textStyle: const TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
+        title: Text('Поиск',
+            textAlign: TextAlign.start,
+            style: myTextStyle(16, MyColors.text, null)),
         leading: Container(
           margin: const EdgeInsets.all(6),
           decoration: BoxDecoration(
@@ -70,7 +66,7 @@ class _SearchpageState extends State<Searchpage> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(Icons.arrow_back_ios_new_outlined),
+            icon: ArrowIcon(),
           ),
         ),
       ),

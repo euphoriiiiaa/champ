@@ -1,5 +1,6 @@
 import 'package:champ/presentation/colors/mycolors.dart';
 import 'package:champ/presentation/pages/onboardingpage.dart';
+import 'package:champ/presentation/textstyle.dart';
 import 'package:champ/presentation/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -22,44 +23,21 @@ class _FirstPageState extends State<FirstPage> {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: AssetImage('assets/sparkles2.png'),
-            ),
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [MyColors.lighterBlue, MyColors.darkerBlue],
+              colors: [MyColors.accent, MyColors.darkerBlue],
             ),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Stack(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 30),
-                    child: Image.asset(
-                      fit: BoxFit.cover,
-                      'assets/sparkles.png',
-                      height: 110,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 267,
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      'ДОБРО ПОЖАЛОВАТЬ',
-                      style: GoogleFonts.raleway(
-                        textStyle: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              SizedBox(
+                width: 267,
+                child: Text(
+                    textAlign: TextAlign.center,
+                    'ДОБРО ПОЖАЛОВАТЬ',
+                    style: myTextStyle(30, Colors.white, null)),
               ),
               Image.asset(
                 fit: BoxFit.cover,

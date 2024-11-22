@@ -4,6 +4,7 @@ import 'package:champ/functions/func.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
 import 'package:champ/presentation/pages/forgotpassword.dart';
 import 'package:champ/presentation/pages/regpage.dart';
+import 'package:champ/presentation/textstyle.dart';
 import 'package:champ/presentation/widgets/button.dart';
 import 'package:champ/presentation/widgets/textbox.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,11 +33,13 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.block,
       appBar: AppBar(
+        backgroundColor: MyColors.block,
         leading: Container(
           margin: EdgeInsets.all(6),
           decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.1),
+              color: MyColors.background,
               borderRadius: BorderRadius.circular(30)),
           child: IconButton(
             onPressed: () {
@@ -53,24 +56,14 @@ class _SignInState extends State<SignIn> {
             children: [
               Text(
                 'Привет!',
-                style: GoogleFonts.raleway(
-                  textStyle: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                style: myTextStyle(32, MyColors.text, null),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width - 100,
                 child: Text(
                   textAlign: TextAlign.center,
                   'Заполните Свои данные или продолжите через социальные медиа',
-                  style: GoogleFonts.raleway(
-                    textStyle: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
+                  style: myTextStyle(16, MyColors.subtextdark, null),
                 ),
               ),
               Padding(
@@ -80,15 +73,9 @@ class _SignInState extends State<SignIn> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width - 50,
                       child: Text(
-                        textAlign: TextAlign.start,
-                        'Email',
-                        style: GoogleFonts.raleway(
-                          textStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
+                          textAlign: TextAlign.start,
+                          'Email',
+                          style: myTextStyle(16, MyColors.text, null)),
                     ),
                     SizedBox(
                       height: 10,
@@ -110,15 +97,10 @@ class _SignInState extends State<SignIn> {
                       child: Text(
                         textAlign: TextAlign.start,
                         'Пароль',
-                        style: GoogleFonts.raleway(
-                          textStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        style: myTextStyle(16, MyColors.text, null),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     SizedBox(
@@ -130,7 +112,7 @@ class _SignInState extends State<SignIn> {
                         hint: '*********',
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 25,
                     ),
                     SizedBox(
@@ -146,16 +128,11 @@ class _SignInState extends State<SignIn> {
                         child: Text(
                           textAlign: TextAlign.end,
                           'Восстановить',
-                          style: GoogleFonts.raleway(
-                            textStyle: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
+                          style: myTextStyle(12, MyColors.subtextdark, null),
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 40,
                     ),
                     Button(
@@ -164,7 +141,7 @@ class _SignInState extends State<SignIn> {
                       },
                       title: 'Войти',
                       controller: null,
-                      bgcolor: MyColors.lighterBlue,
+                      bgcolor: MyColors.accent,
                       titlecolor: Colors.white,
                     )
                   ],
@@ -172,7 +149,7 @@ class _SignInState extends State<SignIn> {
               ),
               Container(
                 alignment: Alignment.bottomCenter,
-                padding: EdgeInsets.only(bottom: 20),
+                padding: const EdgeInsets.only(bottom: 20),
                 height: MediaQuery.of(context).size.height - 650,
                 width: MediaQuery.of(context).size.width - 60,
                 child: Row(
@@ -181,14 +158,9 @@ class _SignInState extends State<SignIn> {
                     Text(
                       textAlign: TextAlign.center,
                       'Вы впервые?',
-                      style: GoogleFonts.raleway(
-                        textStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
+                      style: myTextStyle(16, MyColors.subtextdark, null),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     GestureDetector(
@@ -202,12 +174,7 @@ class _SignInState extends State<SignIn> {
                       child: Text(
                         textAlign: TextAlign.center,
                         'Создать пользователя',
-                        style: GoogleFonts.raleway(
-                          textStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        style: myTextStyle(16, MyColors.text, null),
                       ),
                     )
                   ],

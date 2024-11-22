@@ -1,5 +1,5 @@
-import 'dart:developer';
-
+import 'package:champ/presentation/colors/mycolors.dart';
+import 'package:champ/presentation/textstyle.dart';
 import 'package:flutter/material.dart';
 
 class TextBoxProfile extends StatefulWidget {
@@ -28,9 +28,9 @@ class _TextBoxProfileState extends State<TextBoxProfile> {
         keyboardType: widget.textinputtype,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.only(left: 20),
-          hintStyle: TextStyle(color: Colors.grey[400]),
+          hintStyle: myTextStyle(14, MyColors.hint, null),
           hintText: widget.hint,
-          fillColor: Colors.black.withOpacity(0.05),
+          fillColor: MyColors.block,
           filled: true,
           suffixIcon: widget.controller!.text.isEmpty
               ? null

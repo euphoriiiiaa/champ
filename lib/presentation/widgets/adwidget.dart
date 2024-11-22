@@ -1,8 +1,6 @@
 import 'dart:typed_data';
-
 import 'package:champ/functions/func.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AdWidget extends StatefulWidget {
   const AdWidget({super.key, required this.uuid});
@@ -25,7 +23,6 @@ class _AdWidgetState extends State<AdWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
       width: MediaQuery.of(context).size.width - 50,
       height: MediaQuery.of(context).size.height - 820,
       decoration: BoxDecoration(
@@ -44,12 +41,10 @@ class _AdWidgetState extends State<AdWidget> {
               child: Text('No image available'),
             );
           } else {
-            return Expanded(
-              child: SizedBox(
-                child: Image.memory(
-                  snapshot.data!,
-                  fit: BoxFit.contain,
-                ),
+            return SizedBox(
+              child: Image.memory(
+                snapshot.data!,
+                fit: BoxFit.contain,
               ),
             );
           }

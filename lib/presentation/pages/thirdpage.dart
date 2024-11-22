@@ -1,4 +1,5 @@
 import 'package:champ/presentation/colors/mycolors.dart';
+import 'package:champ/presentation/textstyle.dart';
 import 'package:champ/presentation/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,7 +19,7 @@ class ThirdPage extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [MyColors.lighterBlue, MyColors.darkerBlue],
+            colors: [MyColors.accent, MyColors.darkerBlue],
           ),
         ),
         child: Column(
@@ -33,30 +34,16 @@ class ThirdPage extends StatelessWidget {
             SizedBox(
               width: 315,
               child: Text(
-                textAlign: TextAlign.center,
-                'У вас есть сила, Чтобы',
-                style: GoogleFonts.raleway(
-                  textStyle: TextStyle(
-                    fontSize: 34,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+                  textAlign: TextAlign.center,
+                  'У вас есть сила, Чтобы',
+                  style: myTextStyle(34, Colors.white, null)),
             ),
             SizedBox(
               width: 267,
               child: Text(
-                textAlign: TextAlign.center,
-                'В вашей комнате много красивых и привлекательных растений',
-                style: GoogleFonts.raleway(
-                  textStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+                  textAlign: TextAlign.center,
+                  'В вашей комнате много красивых и привлекательных растений',
+                  style: myTextStyle(16, Colors.white, null)),
             ),
           ],
         ),

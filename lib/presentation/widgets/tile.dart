@@ -1,3 +1,5 @@
+import 'package:champ/presentation/colors/mycolors.dart';
+import 'package:champ/presentation/textstyle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -12,10 +14,11 @@ Widget tile(String title, Function()? onTap) {
           height: 40,
           width: 130,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: Colors.white,
+              borderRadius: BorderRadius.circular(15), color: MyColors.block),
+          child: Text(
+            title,
+            style: myTextStyle(12, MyColors.text, null),
           ),
-          child: Text(title),
         ),
       ),
     ),

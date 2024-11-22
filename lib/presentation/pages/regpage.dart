@@ -1,15 +1,12 @@
-import 'dart:developer' as logs;
-import 'dart:math';
-
 import 'package:champ/data/data.dart';
 import 'package:champ/functions/func.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
+import 'package:champ/presentation/textstyle.dart';
 import 'package:champ/presentation/widgets/button.dart';
 import 'package:champ/presentation/widgets/textbox.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class RegPage extends StatefulWidget {
   const RegPage({super.key});
@@ -27,17 +24,19 @@ class _RegPageState extends State<RegPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.block,
       appBar: AppBar(
+        backgroundColor: MyColors.block,
         leading: Container(
-          margin: EdgeInsets.all(6),
+          margin: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.1),
+              color: MyColors.background,
               borderRadius: BorderRadius.circular(30)),
           child: IconButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(Icons.arrow_back_ios_new_outlined),
+            icon: const Icon(Icons.arrow_back_ios_new_outlined),
           ),
         ),
       ),
@@ -48,24 +47,14 @@ class _RegPageState extends State<RegPage> {
             children: [
               Text(
                 'Регистрация',
-                style: GoogleFonts.raleway(
-                  textStyle: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                style: myTextStyle(32, MyColors.text, null),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width - 100,
                 child: Text(
                   textAlign: TextAlign.center,
                   'Заполните Свои данные или продолжите через социальные медиа',
-                  style: GoogleFonts.raleway(
-                    textStyle: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
+                  style: myTextStyle(16, MyColors.subtextdark, null),
                 ),
               ),
               Padding(
@@ -77,12 +66,7 @@ class _RegPageState extends State<RegPage> {
                       child: Text(
                         textAlign: TextAlign.start,
                         'Ваше имя',
-                        style: GoogleFonts.raleway(
-                          textStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        style: myTextStyle(16, MyColors.text, null),
                       ),
                     ),
                     SizedBox(
@@ -105,12 +89,7 @@ class _RegPageState extends State<RegPage> {
                       child: Text(
                         textAlign: TextAlign.start,
                         'Email',
-                        style: GoogleFonts.raleway(
-                          textStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        style: myTextStyle(16, MyColors.text, null),
                       ),
                     ),
                     SizedBox(
@@ -133,12 +112,7 @@ class _RegPageState extends State<RegPage> {
                       child: Text(
                         textAlign: TextAlign.start,
                         'Пароль',
-                        style: GoogleFonts.raleway(
-                          textStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        style: myTextStyle(16, MyColors.text, null),
                       ),
                     ),
                     SizedBox(
@@ -179,20 +153,15 @@ class _RegPageState extends State<RegPage> {
                               child: Text(
                                 textAlign: TextAlign.start,
                                 'Даю согласие на обработку персональных данных',
-                                style: GoogleFonts.raleway(
-                                  textStyle: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
+                                style: myTextStyle(16, MyColors.text,
+                                    TextDecoration.underline),
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Button(
@@ -200,7 +169,7 @@ class _RegPageState extends State<RegPage> {
                           email.text, password.text, name.text, context),
                       title: 'Зарегистрироваться',
                       controller: null,
-                      bgcolor: MyColors.lighterBlue,
+                      bgcolor: MyColors.accent,
                       titlecolor: Colors.white,
                     )
                   ],
@@ -215,15 +184,9 @@ class _RegPageState extends State<RegPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      textAlign: TextAlign.center,
-                      'Есть аккаунт?',
-                      style: GoogleFonts.raleway(
-                        textStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ),
+                        textAlign: TextAlign.center,
+                        'Есть аккаунт?',
+                        style: myTextStyle(16, MyColors.subtextdark, null)),
                     SizedBox(
                       width: 5,
                     ),
@@ -232,15 +195,9 @@ class _RegPageState extends State<RegPage> {
                         Navigator.pop(context);
                       },
                       child: Text(
-                        textAlign: TextAlign.center,
-                        'Войти',
-                        style: GoogleFonts.raleway(
-                          textStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                          textAlign: TextAlign.center,
+                          'Войти',
+                          style: myTextStyle(16, MyColors.text, null)),
                     )
                   ],
                 ),

@@ -1,5 +1,7 @@
 import 'package:champ/data/data.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
+import 'package:champ/presentation/textstyle.dart';
+import 'package:champ/presentation/widgets/arrowicon.dart';
 import 'package:champ/presentation/widgets/textboxprofile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +10,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 
-class AccountPage extends StatefulWidget {
-  const AccountPage({super.key});
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
 
   @override
-  State<AccountPage> createState() => _AccountPageState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
 TextEditingController name = TextEditingController();
@@ -20,12 +22,13 @@ TextEditingController surname = TextEditingController();
 TextEditingController address = TextEditingController();
 TextEditingController number = TextEditingController();
 
-class _AccountPageState extends State<AccountPage> {
+class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff7f7f9),
+      backgroundColor: MyColors.background,
       appBar: AppBar(
+        centerTitle: true,
         forceMaterialTransparency: true,
         actions: [
           Padding(
@@ -35,13 +38,7 @@ class _AccountPageState extends State<AccountPage> {
               child: Text(
                 'Готово',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.raleway(
-                  textStyle: TextStyle(
-                    color: MyColors.lighterBlue,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                style: myTextStyle(15, MyColors.accent, null),
               ),
             ),
           )
@@ -49,13 +46,7 @@ class _AccountPageState extends State<AccountPage> {
         title: Text(
           'Профиль',
           textAlign: TextAlign.start,
-          style: GoogleFonts.raleway(
-            textStyle: const TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          style: myTextStyle(16, MyColors.text, null),
         ),
         leading: Container(
           margin: const EdgeInsets.all(6),
@@ -65,7 +56,7 @@ class _AccountPageState extends State<AccountPage> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(Icons.arrow_back_ios_new_outlined),
+            icon: ArrowIcon(),
           ),
         ),
       ),
@@ -94,24 +85,12 @@ class _AccountPageState extends State<AccountPage> {
               Text(
                 'Emmanuel Oyiboke',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.raleway(
-                  textStyle: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+                style: myTextStyle(20, MyColors.text, null),
               ),
               Text(
                 'Изменить фото профиля',
                 textAlign: TextAlign.start,
-                style: GoogleFonts.raleway(
-                  textStyle: TextStyle(
-                    color: MyColors.lighterBlue,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+                style: myTextStyle(12, MyColors.accent, null),
               ),
               const SizedBox(
                 height: 12,
@@ -133,16 +112,11 @@ class _AccountPageState extends State<AccountPage> {
                         child: Text(
                           'Открыть',
                           textAlign: TextAlign.start,
-                          style: GoogleFonts.raleway(
-                            textStyle: TextStyle(
-                              color: Colors.black,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
+                          style: myTextStyle(12, MyColors.text, null),
                         ),
                       ),
                       SizedBox(
+                        width: MediaQuery.of(context).size.width - 100,
                         height: 50,
                         child: SfBarcodeGenerator(
                             barColor: Colors.black,
@@ -164,13 +138,7 @@ class _AccountPageState extends State<AccountPage> {
                   Text(
                     'Имя',
                     textAlign: TextAlign.start,
-                    style: GoogleFonts.raleway(
-                      textStyle: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                    style: myTextStyle(20, MyColors.text, null),
                   ),
                 ],
               ),
@@ -190,13 +158,7 @@ class _AccountPageState extends State<AccountPage> {
                   Text(
                     'Фамилия',
                     textAlign: TextAlign.start,
-                    style: GoogleFonts.raleway(
-                      textStyle: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                    style: myTextStyle(20, MyColors.text, null),
                   ),
                 ],
               ),
@@ -216,13 +178,7 @@ class _AccountPageState extends State<AccountPage> {
                   Text(
                     'Адрес',
                     textAlign: TextAlign.start,
-                    style: GoogleFonts.raleway(
-                      textStyle: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                    style: myTextStyle(20, MyColors.text, null),
                   ),
                 ],
               ),
@@ -242,13 +198,7 @@ class _AccountPageState extends State<AccountPage> {
                   Text(
                     'Телефон',
                     textAlign: TextAlign.start,
-                    style: GoogleFonts.raleway(
-                      textStyle: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                    style: myTextStyle(20, MyColors.text, null),
                   ),
                 ],
               ),

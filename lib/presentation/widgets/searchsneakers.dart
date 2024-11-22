@@ -47,11 +47,15 @@ class _SearchSneakersState extends State<SearchSneakers> {
                     itemCount: sortSneakers.length,
                     itemBuilder: (context, index) {
                       return SneakerItem(
+                        category: null,
+                        description: null,
+                        bestseller: null,
+                        fullname: null,
                         height: 50,
                         width: 200,
                         name: sortSneakers[index].name,
                         price: sortSneakers[index].price,
-                        uuid: sortSneakers[index].id,
+                        id: sortSneakers[index].id,
                       );
                     },
                   );

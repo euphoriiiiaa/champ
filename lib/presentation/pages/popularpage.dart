@@ -1,5 +1,6 @@
 import 'package:champ/functions/func.dart';
 import 'package:champ/models/sneakermodel.dart';
+import 'package:champ/presentation/colors/mycolors.dart';
 import 'package:champ/presentation/widgets/sneakeritem.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,7 +17,7 @@ class _PopularPageState extends State<PopularPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xfff7f7f9),
+        backgroundColor: MyColors.background,
         appBar: AppBar(
           forceMaterialTransparency: true,
           actions: [
@@ -77,11 +78,15 @@ class _PopularPageState extends State<PopularPage> {
                     itemCount: sneakers.length,
                     itemBuilder: (context, index) {
                       return SneakerItem(
+                        fullname: null,
+                        bestseller: null,
+                        description: null,
+                        category: null,
                         height: 50,
                         width: 200,
                         name: sneakers[index].name,
                         price: sneakers[index].price,
-                        uuid: sneakers[index].id,
+                        id: sneakers[index].id,
                       );
                     },
                   );

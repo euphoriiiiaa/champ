@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:champ/presentation/colors/mycolors.dart';
+import 'package:champ/presentation/textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -36,9 +38,9 @@ class _TextBoxState extends State<TextBox> {
             : TextInputType.visiblePassword,
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.all(20),
-            hintStyle: TextStyle(color: Colors.grey[400]),
+            hintStyle: myTextStyle(14, MyColors.hint, null),
             hintText: widget.hint,
-            fillColor: Colors.black.withOpacity(0.05),
+            fillColor: MyColors.background,
             filled: true,
             suffixIcon: widget.email == true
                 ? null

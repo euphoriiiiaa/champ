@@ -9,6 +9,7 @@ import 'package:champ/models/adsmodel.dart';
 import 'package:champ/models/categorymodel.dart';
 import 'package:champ/models/notificationmodel.dart';
 import 'package:champ/models/popularsneaker.dart';
+import 'package:champ/models/sneakercartmodel.dart';
 import 'package:champ/models/sneakermodel.dart';
 import 'package:champ/presentation/pages/mainpageview.dart';
 import 'package:champ/presentation/pages/otppage.dart';
@@ -19,11 +20,9 @@ import 'package:champ/riverpod/notificationsprovider.dart';
 import 'package:email_validator_flutter/email_validator_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/yandex.dart';
-import 'package:native_shared_preferences/native_shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -84,6 +83,30 @@ class Func {
     } catch (e) {
       logs.log(e.toString());
       return List.empty();
+    }
+  }
+
+  Future<SneakerCartModel?> getSneakerToCart(
+      String id, Uint8List imageFuture) async {
+    try {
+      var sup = SupabaseInit().supabase;
+
+      var list = await sup!.from('sneakers').select().eq('id', id);
+
+      SneakerModel sneaker =
+          list.map((item) => SneakerModel.fromMap(item)).first;
+
+      SneakerCartModel sneakerr = SneakerCartModel(
+        id: sneaker.id,
+        image: imageFuture,
+        name: sneaker.name,
+        price: sneaker.price,
+        count: 1,
+      );
+      return sneakerr;
+    } catch (e) {
+      logs.log(e.toString());
+      return null;
     }
   }
 
@@ -332,12 +355,12 @@ class Func {
   Future<void> saveHistoryList(List<String> list) async {
     logs.log('Saving history list: $list');
     var asd = list.join(',');
-    NativeSharedPreferences prefs = await NativeSharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('myList', asd);
   }
 
   Future<List<String>> loadHistoryList() async {
-    NativeSharedPreferences prefs = await NativeSharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     String? list = prefs.getString('myList');
     logs.log('Loaded history list: $list');
     return list!.split(',');
@@ -353,7 +376,7 @@ class Func {
 
       final AuthResponse userSign = await sup!.auth.signInWithPassword(
         email: Data.emailUser,
-        password: 'dddaaqa',
+        password: 'dgdfdfd',
       );
       if (userSign.user != null) {
         Data.uuidUser = userSign.user!.id;

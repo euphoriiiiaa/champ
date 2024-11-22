@@ -1,7 +1,10 @@
 import 'dart:typed_data';
 
 import 'package:champ/functions/func.dart';
+import 'package:champ/models/cartmodel.dart';
+import 'package:champ/models/sneakermodel.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
+import 'package:champ/presentation/textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,42 +12,49 @@ import 'package:google_fonts/google_fonts.dart';
 class SneakerItem extends StatefulWidget {
   const SneakerItem(
       {super.key,
+      required this.id,
       required this.name,
       required this.price,
-      required this.uuid,
+      required this.category,
+      required this.description,
+      required this.bestseller,
+      required this.fullname,
       required this.height,
-      required this.width});
+      required this.width,
+      requ});
 
   final String name;
   final double price;
-  final String uuid;
+  final String? id;
   final double height;
   final double width;
+  final int? category;
+  final String? description;
+  final bool? bestseller;
+  final String? fullname;
 
   @override
   State<SneakerItem> createState() => _SneakerItemState();
 }
 
 class _SneakerItemState extends State<SneakerItem> {
-  Future<Uint8List?>? _imageFuture;
+  Future<Uint8List?>? imageFuture;
 
   @override
   void initState() {
     super.initState();
-    _imageFuture = Func().getSneakerImage(widget.uuid);
+    imageFuture = Func().getSneakerImage(widget.id!);
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 10, left: 10),
+      padding: const EdgeInsets.only(top: 10, left: 10),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: Colors.white,
-        ),
+            borderRadius: BorderRadius.circular(16), color: MyColors.block),
         child: FutureBuilder<Uint8List?>(
-          future: _imageFuture,
+          future: imageFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -62,7 +72,11 @@ class _SneakerItemState extends State<SneakerItem> {
                     children: [
                       IconButton(
                         onPressed: () {},
-                        icon: SvgPicture.asset('assets/heart.svg'),
+                        icon: Image.asset(
+                          height: 28,
+                          width: 28,
+                          'assets/unchecked_heart.png',
+                        ),
                       ),
                     ],
                   ),
@@ -83,13 +97,7 @@ class _SneakerItemState extends State<SneakerItem> {
                         child: Text(
                           'BEST SELLER',
                           textAlign: TextAlign.start,
-                          style: GoogleFonts.raleway(
-                            textStyle: TextStyle(
-                              color: MyColors.lighterBlue,
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
+                          style: myTextStyle(12, MyColors.accent, null),
                         ),
                       ),
                     ],
@@ -101,13 +109,7 @@ class _SneakerItemState extends State<SneakerItem> {
                         child: Text(
                           widget.name,
                           textAlign: TextAlign.start,
-                          style: GoogleFonts.raleway(
-                            textStyle: TextStyle(
-                              color: Colors.grey[700],
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
+                          style: myTextStyle(16, MyColors.subtextdark, null),
                         ),
                       ),
                     ],
@@ -117,30 +119,38 @@ class _SneakerItemState extends State<SneakerItem> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 10, bottom: 20),
+                        padding: const EdgeInsets.only(left: 10),
                         child: Text(
                           '₽ ${widget.price}',
                           textAlign: TextAlign.start,
-                          style: GoogleFonts.raleway(
-                            textStyle: TextStyle(
-                              color: Colors.black,
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
+                          style: myTextStyle(16, MyColors.text, null),
                         ),
                       ),
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          color: MyColors.lighterBlue,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              bottomRight: Radius.circular(15)),
+                      GestureDetector(
+                        onTap: () async {
+                          var sneaker = await Func()
+                              .getSneakerToCart(widget.id!, snapshot.data!);
+                          if (sneaker != null) {
+                            CartModel.cart
+                                .putIfAbsent(sneaker.id, () => sneaker);
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text('sneaker added to cart ${sneaker.name}'),
+                            ));
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: MyColors.accent,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(15),
+                                bottomRight: Radius.circular(15)),
+                          ),
+                          child: SvgPicture.asset('assets/plus.svg'),
                         ),
-                        child: SvgPicture.asset('assets/plus.svg'),
                       )
                     ],
                   ),

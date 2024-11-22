@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:champ/functions/func.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
 import 'package:champ/presentation/pages/otppage.dart';
+import 'package:champ/presentation/textstyle.dart';
 import 'package:champ/presentation/widgets/button.dart';
 import 'package:champ/presentation/widgets/emailnotification.dart';
 import 'package:champ/presentation/widgets/textbox.dart';
@@ -25,43 +26,35 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.block,
       appBar: AppBar(
+          backgroundColor: MyColors.block,
           leading: Container(
-        margin: EdgeInsets.all(6),
-        decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(30)),
-        child: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios_new_outlined),
-        ),
-      )),
+            margin: EdgeInsets.all(6),
+            decoration: BoxDecoration(
+                color: MyColors.background,
+                borderRadius: BorderRadius.circular(30)),
+            child: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.arrow_back_ios_new_outlined),
+            ),
+          )),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             children: [
               Text(
                 'Забыл Пароль',
-                style: GoogleFonts.raleway(
-                  textStyle: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                style: myTextStyle(32, MyColors.text, null),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width - 150,
                 child: Text(
                   textAlign: TextAlign.center,
                   'Введите Свою Учетную Запись Для Сброса',
-                  style: GoogleFonts.raleway(
-                    textStyle: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
+                  style: myTextStyle(16, MyColors.subtextdark, null),
                 ),
               ),
               Padding(
@@ -89,7 +82,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       },
                       title: 'Отправить',
                       controller: null,
-                      bgcolor: MyColors.lighterBlue,
+                      bgcolor: MyColors.accent,
                       titlecolor: Colors.white,
                     )
                   ],

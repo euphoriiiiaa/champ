@@ -1,7 +1,6 @@
-import 'package:champ/presentation/pages/signin.dart';
+import 'package:champ/presentation/textstyle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Button extends StatelessWidget {
   const Button(
@@ -30,9 +29,7 @@ class Button extends StatelessWidget {
             color: bgcolor, borderRadius: BorderRadius.circular(13)),
         child: Text(
           title,
-          style: GoogleFonts.raleway(
-            textStyle: TextStyle(fontWeight: FontWeight.w600, color: titlecolor),
-          ),
+          style: myTextStyle(14, titlecolor, null),
         ),
       ),
     );

@@ -1,5 +1,8 @@
 import 'package:champ/functions/func.dart';
 import 'package:champ/models/sneakermodel.dart';
+import 'package:champ/presentation/colors/mycolors.dart';
+import 'package:champ/presentation/textstyle.dart';
+import 'package:champ/presentation/widgets/arrowicon.dart';
 import 'package:champ/presentation/widgets/sneakeritem.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,42 +19,32 @@ class _FavouritePageState extends State<FavouritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff7f7f9),
+      backgroundColor: MyColors.background,
       appBar: AppBar(
+        centerTitle: true,
         forceMaterialTransparency: true,
         actions: [
-          Container(
-            margin: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(30)),
-            child: IconButton(
-              onPressed: () {},
-              icon: SvgPicture.asset(
-                'assets/heart_favourite.svg',
-              ),
+          IconButton(
+            onPressed: () {},
+            icon: Image.asset(
+              'assets/checked_heart.png',
             ),
           ),
         ],
         title: Text(
           'Избранное',
           textAlign: TextAlign.start,
-          style: GoogleFonts.raleway(
-            textStyle: const TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          style: myTextStyle(16, MyColors.text, null),
         ),
         leading: Container(
           margin: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(30)),
+              color: MyColors.block, borderRadius: BorderRadius.circular(30)),
           child: IconButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(Icons.arrow_back_ios_new_outlined),
+            icon: ArrowIcon(),
           ),
         ),
       ),
@@ -77,11 +70,15 @@ class _FavouritePageState extends State<FavouritePage> {
                   itemCount: sneakers.length,
                   itemBuilder: (context, index) {
                     return SneakerItem(
+                      fullname: null,
+                      bestseller: null,
+                      description: null,
+                      category: null,
                       height: 50,
                       width: 200,
                       name: sneakers[index].name,
                       price: sneakers[index].price,
-                      uuid: sneakers[index].id,
+                      id: sneakers[index].id,
                     );
                   },
                 );

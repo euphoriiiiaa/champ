@@ -1,3 +1,5 @@
+import 'package:champ/presentation/colors/mycolors.dart';
+import 'package:champ/presentation/textstyle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,50 +31,27 @@ class _NotificationItemState extends State<NotificationItem> {
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(12)),
+                color: MyColors.block, borderRadius: BorderRadius.circular(12)),
             child: Row(
               children: [
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.header,
-                        style: GoogleFonts.raleway(
-                          textStyle: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                      Text(widget.header,
+                          style: myTextStyle(16, MyColors.text, null)),
                       SizedBox(
                         height: 10,
                       ),
                       Text(
                         widget.body,
-                        style: GoogleFonts.raleway(
-                          textStyle: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 12,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
+                        style: myTextStyle(12, MyColors.text, null),
                       ),
                       SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        widget.created_at.toString(),
-                        style: GoogleFonts.raleway(
-                          textStyle: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 12,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ),
+                      Text(widget.created_at.toString(),
+                          style: myTextStyle(12, MyColors.subtextdark, null)),
                     ],
                   ),
                 ),
@@ -80,7 +59,7 @@ class _NotificationItemState extends State<NotificationItem> {
             ),
           ),
           widget.readed
-              ? SizedBox()
+              ? const SizedBox()
               : Align(
                   alignment: Alignment.bottomRight,
                   child: Image.asset(
