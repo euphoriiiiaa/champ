@@ -6,6 +6,7 @@ import 'package:champ/presentation/widgets/arrowicon.dart';
 import 'package:champ/presentation/widgets/sneakeritem.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FavouritePage extends StatefulWidget {
@@ -36,29 +37,24 @@ class _FavouritePageState extends State<FavouritePage> {
           textAlign: TextAlign.start,
           style: myTextStyle(16, MyColors.text, null),
         ),
-        leading: Container(
-          margin: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-              color: MyColors.block, borderRadius: BorderRadius.circular(30)),
-          child: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: ArrowIcon(),
-          ),
+        leading: IconButton(
+          onPressed: () {
+            ZoomDrawer.of(context)!.toggle();
+          },
+          icon: SvgPicture.asset('assets/Hamburger.svg'),
         ),
       ),
       body: SizedBox(
         width: MediaQuery.of(context).size.width - 10,
         child: FutureBuilder(
-            future: Func().getSneakers(),
+            future: Func().getFavoriteSneakers(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(child: Text('No categories found.'));
+                return Center(child: Text('No sneakers favorites found.'));
               } else {
                 List<SneakerModel> sneakers = snapshot.data!;
                 return GridView.builder(

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer' as logs;
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -7,20 +8,25 @@ import 'package:champ/api/supabase.dart';
 import 'package:champ/data/data.dart';
 import 'package:champ/models/adsmodel.dart';
 import 'package:champ/models/categorymodel.dart';
+import 'package:champ/models/favoritemodel.dart';
 import 'package:champ/models/notificationmodel.dart';
 import 'package:champ/models/popularsneaker.dart';
 import 'package:champ/models/sneakercartmodel.dart';
 import 'package:champ/models/sneakermodel.dart';
+import 'package:champ/presentation/pages/drawerscreen.dart';
 import 'package:champ/presentation/pages/mainpageview.dart';
 import 'package:champ/presentation/pages/otppage.dart';
+import 'package:champ/presentation/pages/profilepage.dart';
 import 'package:champ/presentation/pages/signin.dart';
 import 'package:champ/presentation/widgets/emailnotification.dart';
 import 'package:champ/presentation/widgets/writepassword.dart';
+import 'package:champ/riverpod/cartprovider.dart';
 import 'package:champ/riverpod/notificationsprovider.dart';
 import 'package:email_validator_flutter/email_validator_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/yandex.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,9 +36,9 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 class Func {
   Future<List<CategoryModel>> getCategories() async {
     try {
-      var sup = SupabaseInit().supabase;
+      var sup = GetIt.I.get<SupabaseClient>();
 
-      var list = await sup!.from('categories').select();
+      var list = await sup.from('categories').select();
 
       List<CategoryModel> newList =
           (list as List).map((item) => CategoryModel.fromMap(item)).toList();
@@ -44,10 +50,64 @@ class Func {
     }
   }
 
+  void exitFromApp() async {
+    if (Supabase.instance.client.auth.currentUser != null) {
+      var sup = GetIt.I.get<SupabaseClient>();
+      await sup.auth.signOut();
+      Future.delayed(const Duration(milliseconds: 500), exit(0));
+    }
+  }
+
+  double getCartSum(WidgetRef ref) {
+    var cart = ref.read(cartProvider);
+    double sum = 0;
+    cart.forEach((key, value) {
+      sum += value.price * value.count!;
+    });
+
+    return sum;
+  }
+
+  Future<User?> changeUserInfo(String name, String surname, String address,
+      String phoneNumber, BuildContext context) async {
+    if ((name.isEmpty &&
+            surname.isEmpty &&
+            address.isEmpty &&
+            phoneNumber.isEmpty) ||
+        (name.isEmpty ||
+            surname.isEmpty ||
+            address.isEmpty ||
+            phoneNumber.isEmpty)) {
+      logs.log('fields is empty');
+      return null;
+    }
+
+    try {
+      var sup = GetIt.I.get<SupabaseClient>();
+
+      var updatedUser = await sup.auth.updateUser(UserAttributes(data: {
+        'name': name,
+        'surname': surname,
+        'address': address,
+        'phoneNumber': phoneNumber
+      }));
+      logs.log(
+          'success data changed for user ${sup.auth.currentUser!.userMetadata!['name']}');
+      Navigator.pop(context, {
+        'name': name,
+        'surname': surname,
+        'address': address,
+        'number': phoneNumber
+      });
+    } catch (e) {
+      logs.log(e.toString());
+    }
+  }
+
   Future<void> markAsReaded(
       NotificationModel notification, WidgetRef ref) async {
     try {
-      var sup = SupabaseInit().supabase;
+      var sup = GetIt.I.get<SupabaseClient>();
 
       await sup!
           .from('notifications')
@@ -70,7 +130,7 @@ class Func {
 
   Future<List<NotificationModel>> getNotifications() async {
     try {
-      var sup = SupabaseInit().supabase;
+      var sup = GetIt.I.get<SupabaseClient>();
 
       var list = await sup!.from('notifications').select();
 
@@ -89,7 +149,7 @@ class Func {
   Future<SneakerCartModel?> getSneakerToCart(
       String id, Uint8List imageFuture) async {
     try {
-      var sup = SupabaseInit().supabase;
+      var sup = GetIt.I.get<SupabaseClient>();
 
       var list = await sup!.from('sneakers').select().eq('id', id);
 
@@ -112,9 +172,9 @@ class Func {
 
   Future<List<SneakerModel>> getSneakers() async {
     try {
-      var sup = SupabaseInit().supabase;
+      var sup = GetIt.I.get<SupabaseClient>();
 
-      var list = await sup!.from('sneakers').select();
+      var list = await sup.from('sneakers').select();
 
       List<SneakerModel> newList =
           (list as List).map((item) => SneakerModel.fromMap(item)).toList();
@@ -126,9 +186,75 @@ class Func {
     }
   }
 
+  Future<bool?> checkIfSneakerFavorite(String sneakerId) async {
+    try {
+      var sup = GetIt.I.get<SupabaseClient>();
+
+      var list = await sup.from('favorites').select().eq('sneaker', sneakerId);
+      if (list.isEmpty) {
+        return false;
+      } else {
+        return true;
+      }
+    } catch (e) {
+      logs.log(e.toString());
+      return null;
+    }
+  }
+
+  Future<void> unselectFavorite(String sneakerId) async {
+    try {
+      var sup = GetIt.I.get<SupabaseClient>();
+
+      await sup.from('favorites').delete().eq('sneaker', sneakerId);
+      logs.log('success delete favorite sneaker');
+    } catch (e) {
+      logs.log(e.toString());
+    }
+  }
+
+  Future<void> selectFavorite(String sneakerId) async {
+    try {
+      var sup = GetIt.I.get<SupabaseClient>();
+
+      await sup
+          .from('favorites')
+          .insert({'sneaker': sneakerId, 'user': sup.auth.currentUser!.id});
+      logs.log('success insert favorite sneaker');
+    } catch (e) {
+      logs.log(e.toString());
+    }
+  }
+
+  Future<List<SneakerModel>> getFavoriteSneakers() async {
+    try {
+      var sup = GetIt.I.get<SupabaseClient>();
+      if (sup.auth.currentUser != null) {
+        var user = sup.auth.currentUser;
+        var list = await sup.from('favorites').select().eq('user', user!.id);
+        var sneakers = await sup.from('sneakers').select();
+        List<SneakerModel> newList = [];
+        for (var item in list) {
+          for (var item2 in sneakers) {
+            if (item['sneaker'] == item2['id']) {
+              var sneaker = SneakerModel.fromMap(item2);
+              newList.add(sneaker);
+            }
+          }
+        }
+        return newList;
+      } else {
+        return List.empty();
+      }
+    } catch (e) {
+      logs.log(e.toString());
+      return List.empty();
+    }
+  }
+
   Future<List<SneakerModel>> getPopularSneakers() async {
     try {
-      var sup = SupabaseInit().supabase;
+      var sup = GetIt.I.get<SupabaseClient>();
 
       var list = await sup!.from('popular').select();
 
@@ -154,7 +280,7 @@ class Func {
 
   Future<List<AdsModel>> getAds() async {
     try {
-      var sup = SupabaseInit().supabase;
+      var sup = GetIt.I.get<SupabaseClient>();
 
       var list = await sup!.from('ads').select();
 
@@ -170,7 +296,7 @@ class Func {
 
   Future<Uint8List?> getAdImage(String uuid) async {
     try {
-      var sup = SupabaseInit().supabase;
+      var sup = GetIt.I.get<SupabaseClient>();
 
       final Uint8List file =
           await sup!.storage.from('ads').download('$uuid.png');
@@ -183,7 +309,7 @@ class Func {
 
   Future<List<SneakerModel>> getSneakersSort(String nameSneaker) async {
     try {
-      var sup = SupabaseInit().supabase;
+      var sup = GetIt.I.get<SupabaseClient>();
 
       var list = await sup!.from('sneakers').select().eq('name', nameSneaker);
 
@@ -199,7 +325,7 @@ class Func {
 
   Future<Uint8List?> getSneakerImage(String uuid) async {
     try {
-      var sup = SupabaseInit().supabase;
+      var sup = GetIt.I.get<SupabaseClient>();
 
       final Uint8List file =
           await sup!.storage.from('assets').download('$uuid.png');
@@ -261,7 +387,7 @@ class Func {
 
     email.toLowerCase();
 
-    var sup = SupabaseInit().supabase;
+    var sup = GetIt.I.get<SupabaseClient>();
 
     final AuthResponse res = await sup!.auth.signUp(
       email: email,
@@ -372,14 +498,14 @@ class Func {
       return;
     }
     try {
-      var sup = SupabaseInit().supabase;
+      var sup = GetIt.I.get<SupabaseClient>();
 
       final AuthResponse userSign = await sup!.auth.signInWithPassword(
         email: Data.emailUser,
         password: 'dgdfdfd',
       );
       if (userSign.user != null) {
-        Data.uuidUser = userSign.user!.id;
+        logs.log('change pass');
       } else {
         logs.log('no user');
       }
@@ -417,6 +543,11 @@ class Func {
     return genPass;
   }
 
+  void getUserMeta() async {
+    logs.log(
+        Supabase.instance.client.auth.currentUser!.userMetadata.toString());
+  }
+
   void tryToSignIn(String email, String password, BuildContext context) async {
     if ((email.isEmpty && password.isEmpty) ||
         (email.isEmpty || password.isEmpty)) {
@@ -425,16 +556,16 @@ class Func {
     }
 
     try {
-      var sup = SupabaseInit().supabase;
+      var sup = GetIt.I.get<SupabaseClient>();
 
       final AuthResponse res = await sup!.auth.signInWithPassword(
         email: email,
         password: password,
       );
       if (res.user != null) {
-        Data.uuidUser = res.user!.id;
         Navigator.push(context,
-            CupertinoPageRoute(builder: (context) => const MainPageView()));
+            CupertinoPageRoute(builder: (context) => const DrawerScreen()));
+        getUserMeta();
       } else {
         logs.log('no user');
       }

@@ -33,85 +33,163 @@ class CartItem extends ConsumerStatefulWidget {
 class _CartItemState extends ConsumerState<CartItem> {
   @override
   Widget build(BuildContext context) {
-    return SwipeableTile.swipeToTriggerCard(
-      shadow: BoxShadow(
-        color: Colors.black.withOpacity(0.2),
-        blurRadius: 20,
-        spreadRadius: 1,
-        blurStyle: BlurStyle.outer,
-      ),
-      verticalPadding: 10,
-      horizontalPadding: 10,
-      borderRadius: 20,
-      color: Colors.white,
-      direction: SwipeDirection.horizontal,
-      onSwiped: (direction) {
-        if (direction == SwipeDirection.endToStart) {
-          setState(() {
-            CartModel.cart.update(
-                widget.id, (item) => item.copyWith(count: item.count! - 1));
-          });
-        } else if (direction == SwipeDirection.startToEnd) {
-          setState(() {
-            CartModel.cart.update(
-                widget.id, (item) => item.copyWith(count: item.count! + 1));
-          });
-        }
-      },
-      backgroundBuilder: (context, direction, progress) {
-        if (direction == SwipeDirection.startToEnd) {
-          return Container(
-            color: MyColors.accent,
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.only(left: 10),
-            child: SvgPicture.asset(
-              'assets/plus.svg',
+    final cartNotifier = ref.read(cartProvider.notifier);
+    return widget.count != 1
+        ? SwipeableTile.swipeToTriggerCard(
+            shadow: BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 20,
+              spreadRadius: 1,
+              blurStyle: BlurStyle.outer,
+            ),
+            verticalPadding: 10,
+            horizontalPadding: 10,
+            borderRadius: 20,
+            color: Colors.white,
+            direction: SwipeDirection.horizontal,
+            onSwiped: (direction) {
+              if (direction == SwipeDirection.endToStart) {
+                if (widget.count == 1) {
+                  cartNotifier.removeFromCart(widget.id);
+                } else {
+                  cartNotifier.updateCount(widget.id, widget.count - 1);
+                }
+              } else if (direction == SwipeDirection.startToEnd) {
+                cartNotifier.updateCount(widget.id, widget.count + 1);
+              }
+            },
+            backgroundBuilder: (context, direction, progress) {
+              if (direction == SwipeDirection.startToEnd) {
+                return Container(
+                  color: MyColors.accent,
+                  alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.only(left: 10),
+                  child: SvgPicture.asset(
+                    'assets/plus.svg',
+                  ),
+                );
+              } else if (direction == SwipeDirection.endToStart) {
+                return Container(
+                  color: MyColors.red,
+                  alignment: Alignment.centerRight,
+                  padding: EdgeInsets.only(right: 10),
+                  child: Icon(
+                    Icons.remove,
+                    color: Colors.white,
+                  ),
+                );
+              }
+              return Container();
+            },
+            key: UniqueKey(),
+            child: SizedBox(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Image.memory(
+                    widget.image,
+                    height: 120,
+                    width: 140,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.name,
+                        style: myTextStyle(20, MyColors.text, null),
+                      ),
+                      Text(
+                        'Р ${widget.price}',
+                        style: myTextStyle(16, MyColors.text, null),
+                      ),
+                      Text(
+                        'Количество ${widget.count} шт.',
+                        style: myTextStyle(16, MyColors.text, null),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          )
+        : SwipeableTile.card(
+            shadow: BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 20,
+              spreadRadius: 1,
+              blurStyle: BlurStyle.outer,
+            ),
+            verticalPadding: 10,
+            horizontalPadding: 10,
+            borderRadius: 20,
+            color: Colors.white,
+            direction: SwipeDirection.horizontal,
+            onSwiped: (direction) {
+              if (direction == SwipeDirection.endToStart) {
+                if (widget.count == 1) {
+                  cartNotifier.removeFromCart(widget.id);
+                } else {
+                  cartNotifier.updateCount(widget.id, widget.count - 1);
+                }
+              } else if (direction == SwipeDirection.startToEnd) {
+                cartNotifier.updateCount(widget.id, widget.count + 1);
+              }
+            },
+            backgroundBuilder: (context, direction, progress) {
+              if (direction == SwipeDirection.startToEnd) {
+                return Container(
+                  color: MyColors.accent,
+                  alignment: Alignment.centerLeft,
+                  padding: EdgeInsets.only(left: 10),
+                  child: SvgPicture.asset(
+                    'assets/plus.svg',
+                  ),
+                );
+              } else if (direction == SwipeDirection.endToStart) {
+                return Container(
+                  color: MyColors.red,
+                  alignment: Alignment.centerRight,
+                  padding: EdgeInsets.only(right: 10),
+                  child: Icon(
+                    Icons.remove,
+                    color: Colors.white,
+                  ),
+                );
+              }
+              return Container();
+            },
+            key: UniqueKey(),
+            child: SizedBox(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Image.memory(
+                    widget.image,
+                    height: 120,
+                    width: 140,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.name,
+                        style: myTextStyle(20, MyColors.text, null),
+                      ),
+                      Text(
+                        'Р ${widget.price}',
+                        style: myTextStyle(16, MyColors.text, null),
+                      ),
+                      Text(
+                        'Количество ${widget.count} шт.',
+                        style: myTextStyle(16, MyColors.text, null),
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
           );
-        } else if (direction == SwipeDirection.endToStart) {
-          return Container(
-            color: MyColors.red,
-            alignment: Alignment.centerRight,
-            padding: EdgeInsets.only(right: 10),
-            child: Icon(
-              Icons.remove,
-              color: Colors.white,
-            ),
-          );
-        }
-        return Container();
-      },
-      key: UniqueKey(),
-      child: SizedBox(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Image.memory(
-              widget.image,
-              height: 120,
-              width: 140,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.name,
-                  style: myTextStyle(20, MyColors.text, null),
-                ),
-                Text(
-                  'Р ${widget.price}',
-                  style: myTextStyle(16, MyColors.text, null),
-                ),
-                Text(
-                  'Количество ${widget.count} шт.',
-                  style: myTextStyle(16, MyColors.text, null),
-                )
-              ],
-            )
-          ],
-        ),
-      ),
-    );
   }
 }

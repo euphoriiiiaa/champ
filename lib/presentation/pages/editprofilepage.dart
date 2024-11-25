@@ -1,46 +1,44 @@
 import 'package:champ/data/data.dart';
+import 'package:champ/functions/func.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
-import 'package:champ/presentation/pages/editprofilepage.dart';
 import 'package:champ/presentation/textstyle.dart';
 import 'package:champ/presentation/widgets/arrowicon.dart';
 import 'package:champ/presentation/widgets/textboxprofile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class EditProfilePage extends StatefulWidget {
+  const EditProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<EditProfilePage> createState() => _EditProfilePageState();
 }
 
 TextEditingController name = TextEditingController();
 TextEditingController surname = TextEditingController();
 TextEditingController address = TextEditingController();
 TextEditingController number = TextEditingController();
-String? nameProfile;
 
-class _ProfilePageState extends State<ProfilePage> {
+class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
-    Supabase.instance.client.auth.refreshSession();
-    name.text =
-        Supabase.instance.client.auth.currentUser!.userMetadata!['name'];
-    surname.text =
-        Supabase.instance.client.auth.currentUser!.userMetadata!['surname'];
-    address.text =
-        Supabase.instance.client.auth.currentUser!.userMetadata!['address'];
-    number.text =
-        Supabase.instance.client.auth.currentUser!.userMetadata!['phoneNumber'];
-    nameProfile = name.text;
+    if (Supabase.instance.client.auth.currentUser != null) {
+      name.text =
+          Supabase.instance.client.auth.currentUser!.userMetadata!['name'];
+      surname.text =
+          Supabase.instance.client.auth.currentUser!.userMetadata!['surname'];
+      address.text =
+          Supabase.instance.client.auth.currentUser!.userMetadata!['address'];
+      number.text = Supabase
+          .instance.client.auth.currentUser!.userMetadata!['phoneNumber'];
+    }
   }
 
   @override
@@ -48,44 +46,27 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: MyColors.background,
       appBar: AppBar(
-        centerTitle: true,
-        forceMaterialTransparency: true,
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 20),
-            child: GestureDetector(
-                onTap: () async {
-                  final result = await Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) => EditProfilePage()));
-                  if (result != null) {
-                    setState(() {
-                      name.text = result['name'];
-                      surname.text = result['surname'];
-                      address.text = result['address'];
-                      number.text = result['namnumbere'];
-                    });
-                  }
-                },
-                child: Image.asset(
-                  'assets/edit_icon.png',
-                  height: 25,
-                )),
-          )
-        ],
-        title: Text(
-          'Профиль',
-          textAlign: TextAlign.start,
-          style: myTextStyle(16, MyColors.text, null),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            ZoomDrawer.of(context)!.toggle();
-          },
-          icon: SvgPicture.asset('assets/Hamburger.svg'),
-        ),
-      ),
+          centerTitle: true,
+          forceMaterialTransparency: true,
+          title: GestureDetector(
+            onTap: () {
+              Func().changeUserInfo(
+                  name.text, surname.text, address.text, number.text, context);
+            },
+            child: Container(
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width - 200,
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: MyColors.accent,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                'Сохранить',
+                style: myTextStyle(14, Colors.white, null),
+              ),
+            ),
+          )),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
         child: SingleChildScrollView(
@@ -118,9 +99,17 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 10,
               ),
               Text(
-                name.text,
+                Supabase.instance.client.auth.currentUser != null
+                    ? Supabase
+                        .instance.client.auth.currentUser!.userMetadata!['name']
+                    : '',
                 textAlign: TextAlign.start,
                 style: myTextStyle(20, MyColors.text, null),
+              ),
+              Text(
+                'Изменить фото профиля',
+                textAlign: TextAlign.start,
+                style: myTextStyle(12, MyColors.accent, null),
               ),
               const SizedBox(
                 height: 12,
@@ -176,10 +165,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 10,
               ),
               TextBoxProfile(
+                isEditable: true,
                 hint: 'Имя',
                 textinputtype: TextInputType.text,
                 controller: name,
-                isEditable: false,
               ),
               SizedBox(
                 height: 10,
@@ -197,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 10,
               ),
               TextBoxProfile(
-                isEditable: false,
+                isEditable: true,
                 hint: 'Фамилия',
                 textinputtype: TextInputType.text,
                 controller: surname,
@@ -218,7 +207,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 10,
               ),
               TextBoxProfile(
-                isEditable: false,
+                isEditable: true,
                 hint: 'Адрес',
                 textinputtype: TextInputType.streetAddress,
                 controller: address,
@@ -239,7 +228,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 10,
               ),
               TextBoxProfile(
-                isEditable: false,
+                isEditable: true,
                 hint: 'Телефон',
                 textinputtype: TextInputType.phone,
                 controller: number,

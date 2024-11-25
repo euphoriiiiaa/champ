@@ -7,16 +7,16 @@ class TextBoxProfile extends StatefulWidget {
       {super.key,
       required this.hint,
       required this.textinputtype,
-      required this.controller});
+      required this.controller,
+      required this.isEditable});
 
   final String hint;
   final TextEditingController? controller;
   final TextInputType textinputtype;
+  final bool isEditable;
   @override
   State<TextBoxProfile> createState() => _TextBoxProfileState();
 }
-
-bool isRevealed = false;
 
 class _TextBoxProfileState extends State<TextBoxProfile> {
   @override
@@ -26,15 +26,22 @@ class _TextBoxProfileState extends State<TextBoxProfile> {
       child: TextField(
         controller: widget.controller,
         keyboardType: widget.textinputtype,
+        readOnly: !widget.isEditable,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.only(left: 20),
           hintStyle: myTextStyle(14, MyColors.hint, null),
           hintText: widget.hint,
           fillColor: MyColors.block,
           filled: true,
-          suffixIcon: widget.controller!.text.isEmpty
+          suffixIcon: (widget.controller!.text.isEmpty || !widget.isEditable)
               ? null
-              : Icon(Icons.confirmation_num),
+              : Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Image.asset(
+                    'assets/confirm_field.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
               borderSide: BorderSide.none),

@@ -9,6 +9,7 @@ import 'package:champ/riverpod/notificationsprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -41,7 +42,9 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage> {
           leading: Container(
             margin: const EdgeInsets.all(6),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                ZoomDrawer.of(context)!.toggle();
+              },
               icon: SvgPicture.asset('assets/Hamburger.svg'),
             ),
           ),

@@ -19,10 +19,16 @@ class MainPageView extends StatefulWidget {
   State<MainPageView> createState() => _MainPageViewState();
 }
 
-PageController pageController = PageController();
+final PageController myPageController = PageController();
 int currentPage = 0;
 
 class _MainPageViewState extends State<MainPageView> {
+  @override
+  void initState() {
+    super.initState();
+    currentPage = 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
@@ -37,9 +43,9 @@ class _MainPageViewState extends State<MainPageView> {
             });
           },
           physics: const BouncingScrollPhysics(),
-          controller: pageController,
-          children: [
-            mainPage(context),
+          controller: myPageController,
+          children: const [
+            MainPage(),
             FavouritePage(),
             NotificationsPage(),
             ProfilePage(),
@@ -47,7 +53,7 @@ class _MainPageViewState extends State<MainPageView> {
         ),
         bottomNavigationBar: NavBar(
           context: context,
-          pageController: pageController,
+          pageController: myPageController,
           currentPage: currentPage,
         ),
       ),

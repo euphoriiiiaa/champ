@@ -41,7 +41,7 @@ class _NavBarState extends State<NavBar> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          pageController.jumpToPage(0);
+                          myPageController.jumpToPage(0);
                         });
                       },
                       child: Image.asset(
@@ -55,7 +55,7 @@ class _NavBarState extends State<NavBar> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          pageController.jumpToPage(1);
+                          myPageController.jumpToPage(1);
                         });
                       },
                       child: Image.asset(
@@ -77,7 +77,7 @@ class _NavBarState extends State<NavBar> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          pageController.jumpToPage(2);
+                          myPageController.jumpToPage(2);
                         });
                       },
                       child: Image.asset(
@@ -91,7 +91,7 @@ class _NavBarState extends State<NavBar> {
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          pageController.jumpToPage(3);
+                          myPageController.jumpToPage(3);
                         });
                       },
                       child: Image.asset(

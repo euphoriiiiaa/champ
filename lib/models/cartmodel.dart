@@ -14,8 +14,6 @@ class CartModel {
     required this.count,
   });
 
-  static Map<String, SneakerCartModel> cart = {};
-
   CartModel copyWith({
     String? id,
     SneakerModel? sneaker,

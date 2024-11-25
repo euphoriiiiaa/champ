@@ -1,3 +1,4 @@
+import 'package:champ/functions/func.dart';
 import 'package:champ/models/cartmodel.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
 import 'package:champ/presentation/textstyle.dart';
@@ -15,14 +16,22 @@ class CartPage extends ConsumerStatefulWidget {
   ConsumerState<CartPage> createState() => _CartPageState();
 }
 
-double sum = 0;
 double delivery = 0;
 double total = 0;
 
 class _CartPageState extends ConsumerState<CartPage> {
   @override
+  void initState() {
+    Future.microtask(() => ref.watch(cartProvider.notifier).updateCartSum());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final cart = ref.watch(cartProvider);
+    final cartSum = ref.watch(cartSumProvider);
+    final cartDelivery = ref.watch(cartDeliveryProvider);
+    final cartTotal = ref.watch(cartTotalProvider);
     return Scaffold(
       backgroundColor: MyColors.background,
       appBar: AppBar(
@@ -46,16 +55,28 @@ class _CartPageState extends ConsumerState<CartPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.only(top: 10),
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Row(
+                children: [
+                  Text(
+                    '${cart.length} товаров',
+                    textAlign: TextAlign.start,
+                    style: myTextStyle(16, MyColors.text, null),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(
               height: MediaQuery.of(context).size.height - 400,
-              width: MediaQuery.of(context).size.width - 80,
+              width: MediaQuery.of(context).size.width - 20,
               child: ListView.builder(
-                  itemCount: CartModel.cart.length,
+                  itemCount: cart.length,
                   itemBuilder: (context, index) {
-                    var keys = CartModel.cart.keys.toList();
+                    var keys = cart.keys.toList();
                     if (keys.isEmpty) {
                       return const Center(
                         child: Text(
@@ -64,7 +85,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                         ),
                       );
                     } else {
-                      var sneaker = CartModel.cart[keys[index]];
+                      var sneaker = cart[keys[index]];
                       return CartItem(
                         id: sneaker!.id,
                         image: sneaker.image,
@@ -91,7 +112,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                           style: myTextStyle(18, MyColors.subtextdark, null),
                         ),
                         Text(
-                          '₽$sum',
+                          '₽$cartSum',
                           style: myTextStyle(18, MyColors.text, null),
                         ),
                       ],
@@ -107,7 +128,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                           style: myTextStyle(18, MyColors.subtextdark, null),
                         ),
                         Text(
-                          '₽$delivery',
+                          '₽$cartDelivery',
                           style: myTextStyle(18, MyColors.text, null),
                         ),
                       ],
@@ -127,7 +148,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                           style: myTextStyle(18, MyColors.text, null),
                         ),
                         Text(
-                          '₽$total',
+                          '₽$cartTotal',
                           style: myTextStyle(18, MyColors.accent, null),
                         ),
                       ],

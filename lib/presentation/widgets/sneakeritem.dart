@@ -5,11 +5,13 @@ import 'package:champ/models/cartmodel.dart';
 import 'package:champ/models/sneakermodel.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
 import 'package:champ/presentation/textstyle.dart';
+import 'package:champ/riverpod/cartprovider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SneakerItem extends StatefulWidget {
+class SneakerItem extends ConsumerStatefulWidget {
   const SneakerItem(
       {super.key,
       required this.id,
@@ -34,20 +36,26 @@ class SneakerItem extends StatefulWidget {
   final String? fullname;
 
   @override
-  State<SneakerItem> createState() => _SneakerItemState();
+  ConsumerState<SneakerItem> createState() => _SneakerItemState();
 }
 
-class _SneakerItemState extends State<SneakerItem> {
+class _SneakerItemState extends ConsumerState<SneakerItem> {
   Future<Uint8List?>? imageFuture;
+  bool? isFavorite = false;
 
   @override
   void initState() {
     super.initState();
     imageFuture = Func().getSneakerImage(widget.id!);
+    Future.microtask(() async {
+      isFavorite = await Func().checkIfSneakerFavorite(widget.id!);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final cart = ref.watch(cartProvider);
+    final cartNotifier = ref.read(cartProvider.notifier);
     return Padding(
       padding: const EdgeInsets.only(top: 10, left: 10),
       child: Container(
@@ -70,14 +78,33 @@ class _SneakerItemState extends State<SneakerItem> {
                 children: [
                   Row(
                     children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Image.asset(
-                          height: 28,
-                          width: 28,
-                          'assets/unchecked_heart.png',
-                        ),
-                      ),
+                      isFavorite!
+                          ? IconButton(
+                              onPressed: () {
+                                Func().unselectFavorite(widget.id!);
+                                setState(() {
+                                  isFavorite = false;
+                                });
+                              },
+                              icon: Image.asset(
+                                height: 28,
+                                width: 28,
+                                'assets/checked_heart.png',
+                              ),
+                            )
+                          : IconButton(
+                              onPressed: () {
+                                Func().selectFavorite(widget.id!);
+                                setState(() {
+                                  isFavorite = true;
+                                });
+                              },
+                              icon: Image.asset(
+                                height: 28,
+                                width: 28,
+                                'assets/unchecked_heart.png',
+                              ),
+                            ),
                     ],
                   ),
                   Expanded(
@@ -131,12 +158,27 @@ class _SneakerItemState extends State<SneakerItem> {
                           var sneaker = await Func()
                               .getSneakerToCart(widget.id!, snapshot.data!);
                           if (sneaker != null) {
-                            CartModel.cart
-                                .putIfAbsent(sneaker.id, () => sneaker);
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content:
-                                  Text('sneaker added to cart ${sneaker.name}'),
-                            ));
+                            if (!cart.containsKey(widget.id)) {
+                              ref
+                                  .read(cartProvider.notifier)
+                                  .addToCart(sneaker);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      'sneaker added to cart ${sneaker.name}'),
+                                ),
+                              );
+                              setState(() {});
+                            } else {
+                              cartNotifier.updateCount(
+                                  sneaker.id, sneaker.count! + 1);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(
+                                    'sneaker is already added, increase count'),
+                              ));
+                              setState(() {});
+                            }
                           }
                         },
                         child: Container(
@@ -149,7 +191,9 @@ class _SneakerItemState extends State<SneakerItem> {
                                 topLeft: Radius.circular(15),
                                 bottomRight: Radius.circular(15)),
                           ),
-                          child: SvgPicture.asset('assets/plus.svg'),
+                          child: cartNotifier.checkIfAlreadyInCart(widget.id!)
+                              ? SvgPicture.asset('assets/have_cart.svg')
+                              : SvgPicture.asset('assets/plus.svg'),
                         ),
                       )
                     ],
