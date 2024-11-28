@@ -1,3 +1,4 @@
+import 'package:champ/api/kand.dart';
 import 'package:champ/data/data.dart';
 import 'package:champ/functions/func.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
@@ -106,10 +107,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 textAlign: TextAlign.start,
                 style: myTextStyle(20, MyColors.text, null),
               ),
-              Text(
-                'Изменить фото профиля',
-                textAlign: TextAlign.start,
-                style: myTextStyle(12, MyColors.accent, null),
+              GestureDetector(
+                onTap: Kand.getImage,
+                child: Text(
+                  'Изменить фото профиля',
+                  textAlign: TextAlign.start,
+                  style: myTextStyle(12, MyColors.accent, null),
+                ),
               ),
               const SizedBox(
                 height: 12,

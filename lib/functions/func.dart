@@ -8,6 +8,7 @@ import 'package:champ/api/supabase.dart';
 import 'package:champ/data/data.dart';
 import 'package:champ/models/adsmodel.dart';
 import 'package:champ/models/categorymodel.dart';
+import 'package:champ/models/detailmodel.dart';
 import 'package:champ/models/favoritemodel.dart';
 import 'package:champ/models/notificationmodel.dart';
 import 'package:champ/models/popularsneaker.dart';
@@ -186,6 +187,29 @@ class Func {
     }
   }
 
+  Future<List<DetailModel>> getSneakersForDetail() async {
+    try {
+      var sup = GetIt.I.get<SupabaseClient>();
+
+      var list = await sup.from('sneakers').select();
+
+      List<SneakerModel> newList =
+          (list as List).map((item) => SneakerModel.fromMap(item)).toList();
+      List<DetailModel> images = [];
+      for (var item in newList) {
+        final Uint8List file =
+            await sup.storage.from('assets').download('${item.id}.png');
+        var detail = DetailModel(sneakerid: item.id, image: file);
+        images.add(detail);
+      }
+
+      return images;
+    } catch (e) {
+      logs.log(e.toString());
+      return List.empty();
+    }
+  }
+
   Future<bool?> checkIfSneakerFavorite(String sneakerId) async {
     try {
       var sup = GetIt.I.get<SupabaseClient>();
@@ -331,6 +355,26 @@ class Func {
           await sup!.storage.from('assets').download('$uuid.png');
 
       return file;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<List<Uint8List>?> getAllSneakersImages() async {
+    try {
+      var sup = GetIt.I.get<SupabaseClient>();
+
+      List<Uint8List> images = [];
+      var sneakers = await sup.from('sneakers').select();
+      var list =
+          (sneakers as List).map((item) => SneakerModel.fromMap(item)).toList();
+      for (var item in list) {
+        final Uint8List file =
+            await sup.storage.from('assets').download('${item.id}.png');
+        images.add(file);
+      }
+
+      return images;
     } catch (e) {
       return null;
     }

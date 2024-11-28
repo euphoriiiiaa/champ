@@ -26,6 +26,7 @@ TextEditingController surname = TextEditingController();
 TextEditingController address = TextEditingController();
 TextEditingController number = TextEditingController();
 String? nameProfile;
+String uuid = Supabase.instance.client.auth.currentUser!.id;
 
 class _ProfilePageState extends State<ProfilePage> {
   @override
@@ -134,29 +135,52 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      RotatedBox(
-                        quarterTurns: 3,
-                        child: Text(
-                          'Открыть',
-                          textAlign: TextAlign.start,
-                          style: myTextStyle(12, MyColors.text, null),
+                  child: GestureDetector(
+                    onTap: () {
+                      showCupertinoModalPopup(
+                        context: context,
+                        builder: (context) => Center(
+                          child: Container(
+                            alignment: Alignment.center,
+                            height: 100,
+                            width: MediaQuery.of(context).size.width - 100,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            child: Text(
+                              'UUID: $uuid',
+                              style: myTextStyle(
+                                  16, Colors.black, TextDecoration.none),
+                            ),
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width - 100,
-                        height: 50,
-                        child: SfBarcodeGenerator(
-                            barColor: Colors.black,
-                            symbology: Code128B(),
-                            value: '123121123233'),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                    ],
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        RotatedBox(
+                          quarterTurns: 3,
+                          child: Text(
+                            'Открыть',
+                            textAlign: TextAlign.start,
+                            style: myTextStyle(12, MyColors.text, null),
+                          ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width - 100,
+                          height: 50,
+                          child: SfBarcodeGenerator(
+                              barColor: Colors.black,
+                              symbology: Code39Extended(module: 2),
+                              value: uuid),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
