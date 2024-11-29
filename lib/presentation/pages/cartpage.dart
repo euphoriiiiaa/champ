@@ -5,7 +5,11 @@ import 'package:champ/presentation/textstyle.dart';
 import 'package:champ/presentation/widgets/arrowicon.dart';
 import 'package:champ/presentation/widgets/button.dart';
 import 'package:champ/presentation/widgets/cartitem.dart';
+import 'package:champ/presentation/widgets/checkout.dart';
+import 'package:champ/presentation/widgets/ordernotification.dart';
+import 'package:champ/riverpod/addressprovider.dart';
 import 'package:champ/riverpod/cartprovider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,16 +22,19 @@ class CartPage extends ConsumerStatefulWidget {
 
 double delivery = 0;
 double total = 0;
+bool? isReadyForCheckout;
 
 class _CartPageState extends ConsumerState<CartPage> {
   @override
   void initState() {
     Future.microtask(() => ref.watch(cartProvider.notifier).updateCartSum());
+    isReadyForCheckout = false;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final address = ref.watch(addressProvider);
     final cart = ref.watch(cartProvider);
     final cartSum = ref.watch(cartSumProvider);
     final cartDelivery = ref.watch(cartDeliveryProvider);
@@ -54,51 +61,57 @@ class _CartPageState extends ConsumerState<CartPage> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Row(
-                children: [
-                  Text(
-                    '${cart.length} товаров',
-                    textAlign: TextAlign.start,
-                    style: myTextStyle(16, MyColors.text, null),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height - 400,
-              width: MediaQuery.of(context).size.width - 20,
-              child: ListView.builder(
-                  itemCount: cart.length,
-                  itemBuilder: (context, index) {
-                    var keys = cart.keys.toList();
-                    if (keys.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          'no sneaker',
-                          style: TextStyle(color: Colors.black),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Column(
+            children: [
+              !isReadyForCheckout!
+                  ? Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Row(
+                            children: [
+                              Text(
+                                '${cart.length} товаров',
+                                textAlign: TextAlign.start,
+                                style: myTextStyle(16, MyColors.text, null),
+                              ),
+                            ],
+                          ),
                         ),
-                      );
-                    } else {
-                      var sneaker = cart[keys[index]];
-                      return CartItem(
-                        id: sneaker!.id,
-                        image: sneaker.image,
-                        name: sneaker.name,
-                        price: sneaker.price,
-                        count: sneaker.count!,
-                      );
-                    }
-                  }),
-            ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height - 400,
+                          width: MediaQuery.of(context).size.width - 20,
+                          child: ListView.builder(
+                              itemCount: cart.length,
+                              itemBuilder: (context, index) {
+                                var keys = cart.keys.toList();
+                                if (keys.isEmpty) {
+                                  return const Center(
+                                    child: Text(
+                                      'no sneaker',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  );
+                                } else {
+                                  var sneaker = cart[keys[index]];
+                                  return CartItem(
+                                    id: sneaker!.id,
+                                    image: sneaker.image,
+                                    name: sneaker.name,
+                                    price: sneaker.price,
+                                    count: sneaker.count!,
+                                  );
+                                }
+                              }),
+                        ),
+                      ],
+                    )
+                  : Checkout(),
+              Container(
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
                 decoration: BoxDecoration(
                   color: MyColors.block,
                 ),
@@ -157,16 +170,36 @@ class _CartPageState extends ConsumerState<CartPage> {
                       height: 20,
                     ),
                     Button(
-                        title: "Оформить заказ",
+                        title: isReadyForCheckout!
+                            ? 'Подтвердить'
+                            : 'Оформить заказ',
                         controller: null,
                         bgcolor: MyColors.accent,
                         titlecolor: Colors.white,
-                        onTap: () {})
+                        onTap: () async {
+                          if (!isReadyForCheckout!) {
+                            if (cart.isNotEmpty) {
+                              setState(() {
+                                isReadyForCheckout = true;
+                              });
+                            }
+                          } else {
+                            var result = await Func().createOrder(ref);
+                            if (result) {
+                              showCupertinoModalPopup(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (context) =>
+                                    orderNotification(context),
+                              );
+                            }
+                          }
+                        })
                   ],
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

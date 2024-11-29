@@ -11,6 +11,8 @@ import 'package:champ/models/categorymodel.dart';
 import 'package:champ/models/detailmodel.dart';
 import 'package:champ/models/favoritemodel.dart';
 import 'package:champ/models/notificationmodel.dart';
+import 'package:champ/models/ordermodel.dart';
+import 'package:champ/models/ordersneakersmodel.dart';
 import 'package:champ/models/popularsneaker.dart';
 import 'package:champ/models/sneakercartmodel.dart';
 import 'package:champ/models/sneakermodel.dart';
@@ -21,18 +23,21 @@ import 'package:champ/presentation/pages/profilepage.dart';
 import 'package:champ/presentation/pages/signin.dart';
 import 'package:champ/presentation/widgets/emailnotification.dart';
 import 'package:champ/presentation/widgets/writepassword.dart';
+import 'package:champ/riverpod/addressprovider.dart';
 import 'package:champ/riverpod/cartprovider.dart';
 import 'package:champ/riverpod/notificationsprovider.dart';
 import 'package:email_validator_flutter/email_validator_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/yandex.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:uuid/uuid.dart';
 
 class Func {
   Future<List<CategoryModel>> getCategories() async {
@@ -270,6 +275,115 @@ class Func {
       } else {
         return List.empty();
       }
+    } catch (e) {
+      logs.log(e.toString());
+      return List.empty();
+    }
+  }
+
+  Future<List<SneakerModel>> getSneakersForCategories(
+      String nameCategory) async {
+    try {
+      var sup = GetIt.I.get<SupabaseClient>();
+      var categoriesmodel = await sup.from('categories').select();
+      var categorieslist = (categoriesmodel as List)
+          .map((item) => CategoryModel.fromMap(item))
+          .toList();
+      var category =
+          categorieslist.firstWhere((item) => item.name == nameCategory);
+      var list =
+          await sup.from('sneakers').select().eq('category', category.id);
+
+      List<SneakerModel> newList =
+          (list as List).map((item) => SneakerModel.fromMap(item)).toList();
+
+      return newList;
+    } catch (e) {
+      logs.log(e.toString());
+      return List.empty();
+    }
+  }
+
+  Future<bool> createOrder(WidgetRef ref) async {
+    try {
+      var supabase = GetIt.I.get<SupabaseClient>();
+      final cart = ref.watch(cartProvider);
+      final address = ref.watch(addressProvider);
+      var user = Supabase.instance.client.auth.currentUser;
+      if (user != null) {
+        var orderList = await supabase.from('order').select();
+
+        var list = (orderList as List)
+            .map((item) => OrderModel.fromMap(item))
+            .toList();
+        var id = list.length + 1;
+
+        await supabase.from('order').insert({
+          'id': id,
+          'created_at': DateTime.timestamp().toString(),
+          'user': user.id,
+        });
+
+        var uuid = Uuid();
+        for (var item in cart.keys) {
+          await supabase.from('orderSneakers').insert({
+            'id': uuid.v4(),
+            'sneaker': cart[item]!.id,
+            'order': id,
+            'count': cart[item]!.count,
+            'address': address
+          });
+        }
+        logs.log('successfuly created order');
+        cart.clear();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      logs.log(e.toString());
+      return false;
+    }
+  }
+
+  Future<Position> getPosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled');
+    }
+
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      return Future.error('Location permissions is denied');
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions is denied forever, we cant anything');
+    }
+
+    return await Geolocator.getCurrentPosition();
+  }
+
+  Future<List<SneakerModel>> getSneakersForCategoriesSecond(
+      String nameCategory) async {
+    try {
+      var sup = GetIt.I.get<SupabaseClient>();
+      var categoriesmodel = await sup.from('categories').select();
+      var categorieslist = (categoriesmodel as List)
+          .map((item) => CategoryModel.fromMap(item))
+          .toList();
+      var category =
+          categorieslist.firstWhere((item) => item.name == nameCategory);
+      var list =
+          await sup.from('sneakers').select().eq('category', category.id);
+
+      List<SneakerModel> newList =
+          (list as List).map((item) => SneakerModel.fromMap(item)).toList();
+
+      return newList;
     } catch (e) {
       logs.log(e.toString());
       return List.empty();

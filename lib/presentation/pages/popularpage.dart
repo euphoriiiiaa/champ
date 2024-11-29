@@ -1,6 +1,7 @@
 import 'package:champ/functions/func.dart';
 import 'package:champ/models/sneakermodel.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
+import 'package:champ/presentation/textstyle.dart';
 import 'package:champ/presentation/widgets/sneakeritem.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -19,6 +20,7 @@ class _PopularPageState extends State<PopularPage> {
     return Scaffold(
         backgroundColor: MyColors.background,
         appBar: AppBar(
+          centerTitle: true,
           forceMaterialTransparency: true,
           actions: [
             Container(
@@ -33,17 +35,9 @@ class _PopularPageState extends State<PopularPage> {
               ),
             ),
           ],
-          title: Text(
-            'Популярное',
-            textAlign: TextAlign.start,
-            style: GoogleFonts.raleway(
-              textStyle: const TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+          title: Text('Популярное',
+              textAlign: TextAlign.start,
+              style: myTextStyle(16, MyColors.text, null)),
           leading: Container(
             margin: const EdgeInsets.all(6),
             decoration: BoxDecoration(

@@ -4,7 +4,7 @@ import 'package:champ/functions/func.dart';
 import 'package:champ/models/cartmodel.dart';
 import 'package:champ/models/sneakermodel.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
-import 'package:champ/presentation/pages/detailitem.dart';
+import 'package:champ/presentation/widgets/detailitem.dart';
 import 'package:champ/presentation/pages/detailspage.dart';
 import 'package:champ/presentation/textstyle.dart';
 import 'package:champ/riverpod/cartprovider.dart';

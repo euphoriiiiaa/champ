@@ -5,6 +5,8 @@ import 'package:champ/models/adsmodel.dart';
 import 'package:champ/models/categorymodel.dart';
 import 'package:champ/models/sneakermodel.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
+import 'package:champ/presentation/pages/cartpage.dart';
+import 'package:champ/presentation/pages/categoriespage.dart';
 import 'package:champ/presentation/pages/popularpage.dart';
 import 'package:champ/presentation/pages/searchpage.dart';
 import 'package:champ/presentation/textstyle.dart';
@@ -40,7 +42,10 @@ class MainPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,
+                  CupertinoPageRoute(builder: (context) => const CartPage()));
+            },
             icon: SvgPicture.asset('assets/cart.svg'),
           ),
         ],
@@ -135,7 +140,15 @@ class MainPage extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         itemCount: categories.length,
                         itemBuilder: (context, index) {
-                          return tile(categories[index].name, null);
+                          return tile(categories[index].name, null, () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => CategoriesPage(
+                                    title: categories[index].name),
+                              ),
+                            );
+                          });
                         },
                       );
                     }

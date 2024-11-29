@@ -5,7 +5,7 @@ import 'package:champ/models/detailmodel.dart';
 import 'package:champ/models/sneakermodel.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
 import 'package:champ/presentation/pages/cartpage.dart';
-import 'package:champ/presentation/pages/detailitem.dart';
+import 'package:champ/presentation/widgets/detailitem.dart';
 import 'package:champ/presentation/textstyle.dart';
 import 'package:champ/presentation/widgets/arrowicon.dart';
 import 'package:champ/riverpod/cartprovider.dart';

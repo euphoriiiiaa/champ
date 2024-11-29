@@ -178,7 +178,7 @@ class _CartItemState extends ConsumerState<CartItem> {
                         style: myTextStyle(20, MyColors.text, null),
                       ),
                       Text(
-                        'Р ${widget.price}',
+                        '₽ ${widget.price}',
                         style: myTextStyle(16, MyColors.text, null),
                       ),
                       Text(

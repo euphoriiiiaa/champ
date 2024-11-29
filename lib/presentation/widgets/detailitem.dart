@@ -272,7 +272,10 @@ class _DetailsPageState extends ConsumerState<DetailItem> {
                                   width: 10,
                                 ),
                                 Text(
-                                  'В корзину',
+                                  cartNotifier.checkIfAlreadyInCart(
+                                          widget.sneakerid)
+                                      ? 'Добавлено'
+                                      : 'В корзину',
                                   style: myTextStyle(14, Colors.white, null),
                                 ),
                               ],
