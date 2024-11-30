@@ -7,26 +7,35 @@ import 'package:champ/presentation/pages/favouritepage.dart';
 import 'package:champ/presentation/pages/mainpage.dart';
 import 'package:champ/presentation/pages/notificationspage.dart';
 import 'package:champ/presentation/widgets/navbar.dart';
+import 'package:champ/riverpod/cartprovider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MainPageView extends StatefulWidget {
+class MainPageView extends ConsumerStatefulWidget {
   const MainPageView({super.key});
 
   @override
-  State<MainPageView> createState() => _MainPageViewState();
+  ConsumerState<MainPageView> createState() => _MainPageViewState();
 }
 
 final PageController myPageController = PageController();
 int currentPage = 0;
 
-class _MainPageViewState extends State<MainPageView> {
+class _MainPageViewState extends ConsumerState<MainPageView> {
   @override
   void initState() {
     super.initState();
     currentPage = 0;
+  }
+
+  @override
+  void didChangeDependencies() {
+    final cartNotifier = ref.read(cartProvider.notifier);
+    cartNotifier.loadCart();
+    super.didChangeDependencies();
   }
 
   @override

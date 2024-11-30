@@ -99,7 +99,7 @@ class _CartPageState extends ConsumerState<CartPage> {
                                   var sneaker = cart[keys[index]];
                                   return CartItem(
                                     id: sneaker!.id,
-                                    image: sneaker.image,
+                                    image: sneaker.image!,
                                     name: sneaker.name,
                                     price: sneaker.price,
                                     count: sneaker.count!,

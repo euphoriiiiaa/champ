@@ -5,7 +5,7 @@ import 'dart:typed_data';
 
 class SneakerCartModel {
   final String id;
-  final Uint8List image;
+  final Uint8List? image;
   final String name;
   final double price;
   final int? category;
