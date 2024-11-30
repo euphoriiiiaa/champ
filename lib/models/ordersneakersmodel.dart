@@ -1,33 +1,42 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:typed_data';
 
 class OrderSneakersModel {
   final String id;
   final String sneaker;
-  final int order;
+  final int orderid;
   final int count;
-  final String address;
+  final Uint8List? image;
+  final String? sneakername;
+  final double? cost;
   OrderSneakersModel({
     required this.id,
     required this.sneaker,
-    required this.order,
+    required this.orderid,
     required this.count,
-    required this.address,
+    this.image,
+    this.sneakername,
+    this.cost,
   });
 
   OrderSneakersModel copyWith({
     String? id,
     String? sneaker,
-    int? order,
+    int? orderid,
     int? count,
-    String? address,
+    Uint8List? image,
+    String? sneakername,
+    double? cost,
   }) {
     return OrderSneakersModel(
       id: id ?? this.id,
       sneaker: sneaker ?? this.sneaker,
-      order: order ?? this.order,
+      orderid: orderid ?? this.orderid,
       count: count ?? this.count,
-      address: address ?? this.address,
+      image: image ?? this.image,
+      sneakername: sneakername ?? this.sneakername,
+      cost: cost ?? this.cost,
     );
   }
 
@@ -35,9 +44,10 @@ class OrderSneakersModel {
     return <String, dynamic>{
       'id': id,
       'sneaker': sneaker,
-      'order': order,
+      'orderid': orderid,
       'count': count,
-      'address': address,
+      'sneakername': sneakername,
+      'cost': cost,
     };
   }
 
@@ -45,9 +55,11 @@ class OrderSneakersModel {
     return OrderSneakersModel(
       id: map['id'] as String,
       sneaker: map['sneaker'] as String,
-      order: map['order'] as int,
+      orderid: map['orderid'] as int,
       count: map['count'] as int,
-      address: map['address'] as String,
+      sneakername:
+          map['sneakername'] != null ? map['sneakername'] as String : null,
+      cost: map['cost'] != null ? map['cost'] as double : null,
     );
   }
 
@@ -58,7 +70,7 @@ class OrderSneakersModel {
 
   @override
   String toString() {
-    return 'OrderSneakersModel(id: $id, sneaker: $sneaker, order: $order, count: $count, address: $address)';
+    return 'OrderSneakersModel(id: $id, sneaker: $sneaker, orderid: $orderid, count: $count, image: $image, sneakername: $sneakername, cost: $cost)';
   }
 
   @override
@@ -67,17 +79,21 @@ class OrderSneakersModel {
 
     return other.id == id &&
         other.sneaker == sneaker &&
-        other.order == order &&
+        other.orderid == orderid &&
         other.count == count &&
-        other.address == address;
+        other.image == image &&
+        other.sneakername == sneakername &&
+        other.cost == cost;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
         sneaker.hashCode ^
-        order.hashCode ^
+        orderid.hashCode ^
         count.hashCode ^
-        address.hashCode;
+        image.hashCode ^
+        sneakername.hashCode ^
+        cost.hashCode;
   }
 }

@@ -27,14 +27,16 @@ bool? isReadyForCheckout;
 class _CartPageState extends ConsumerState<CartPage> {
   @override
   void initState() {
-    Future.microtask(() => ref.watch(cartProvider.notifier).updateCartSum());
+    Future.microtask(() {
+      ref.watch(cartProvider.notifier).updateCartSum();
+      ref.watch(cartProvider.notifier).loadCart();
+    });
     isReadyForCheckout = false;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final address = ref.watch(addressProvider);
     final cart = ref.watch(cartProvider);
     final cartSum = ref.watch(cartSumProvider);
     final cartDelivery = ref.watch(cartDeliveryProvider);

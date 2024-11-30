@@ -6,6 +6,8 @@
 	<string>We need your location to provide location-based services.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>We need your location to provide location-based services.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>We need your location to provide location-based services.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>

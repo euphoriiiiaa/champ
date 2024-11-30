@@ -12,12 +12,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class Checkout extends ConsumerStatefulWidget {
-  const Checkout({super.key, this.iseditable});
+class CheckoutDetail extends ConsumerStatefulWidget {
+  const CheckoutDetail({super.key, required this.address});
 
-  final bool? iseditable;
+  final String address;
   @override
-  ConsumerState<Checkout> createState() => _CheckoutState();
+  ConsumerState<CheckoutDetail> createState() => _CheckoutState();
 }
 
 bool? isEditableForMail;
@@ -27,9 +27,8 @@ String? selectedKey;
 TextEditingController mailController = TextEditingController();
 TextEditingController phoneController = TextEditingController();
 LocationSettings? locationSettings;
-List<String> items = ['1082 Аэропорт, Нигерии', 'Ufa'];
 
-class _CheckoutState extends ConsumerState<Checkout> {
+class _CheckoutState extends ConsumerState<CheckoutDetail> {
   @override
   void initState() {
     mailController.text = Supabase.instance.client.auth.currentUser!.email!;
@@ -39,24 +38,11 @@ class _CheckoutState extends ConsumerState<Checkout> {
       accuracy: LocationAccuracy.best,
       distanceFilter: 100,
     );
-    Future.microtask(() async {
-      Position position = await Func().getPosition();
-      setState(() {
-        items.add('${position.latitude}, ${position.longitude}');
-        selectedText = '${position.latitude}, ${position.longitude}';
-      });
-    });
     isEditableForMail = true;
     isEditableForPhone = true;
+    selectedText = widget.address;
     selectedKey = 'firstCard'; // Инициализируем с одним из ключей Map
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    items.add(ref.watch(addressProvider));
-    selectedText = '1082 Аэропорт, Нигерии';
   }
 
   @override
@@ -133,14 +119,6 @@ class _CheckoutState extends ConsumerState<Checkout> {
                       ),
                     ],
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isEditableForMail = !isEditableForMail!;
-                      });
-                    },
-                    child: SvgPicture.asset('assets/edit_icon.svg'),
-                  )
                 ],
               ),
               SizedBox(
@@ -185,14 +163,6 @@ class _CheckoutState extends ConsumerState<Checkout> {
                       ),
                     ],
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isEditableForPhone = !isEditableForPhone!;
-                      });
-                    },
-                    child: SvgPicture.asset('assets/edit_icon.svg'),
-                  )
                 ],
               ),
               SizedBox(
@@ -216,54 +186,6 @@ class _CheckoutState extends ConsumerState<Checkout> {
                       ),
                     ],
                   ),
-                  DropdownButtonHideUnderline(
-                    child: DropdownButton2<String>(
-                      dropdownStyleData: DropdownStyleData(
-                        decoration: BoxDecoration(
-                            color: MyColors.block,
-                            borderRadius: BorderRadius.circular(16)),
-                        width: 200,
-                      ),
-                      customButton: SizedBox(
-                          child: Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: MyColors.subtextdark,
-                      )),
-                      isExpanded: true,
-                      hint: Text(
-                        'Select Item',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Theme.of(context).hintColor,
-                        ),
-                      ),
-                      items: items
-                          .map((String item) => DropdownMenuItem<String>(
-                                value: item,
-                                child: Text(
-                                  item,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ))
-                          .toList(),
-                      value: selectedText,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedText = value!;
-                        });
-                      },
-                      buttonStyleData: const ButtonStyleData(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        height: 40,
-                        width: 140,
-                      ),
-                      menuItemStyleData: const MenuItemStyleData(
-                        height: 40,
-                      ),
-                    ),
-                  )
                 ],
               ),
               const SizedBox(
@@ -308,69 +230,6 @@ class _CheckoutState extends ConsumerState<Checkout> {
                       ),
                     ],
                   ),
-                  DropdownButtonHideUnderline(
-                    child: DropdownButton2<String>(
-                      dropdownStyleData: DropdownStyleData(
-                        decoration: BoxDecoration(
-                          color: MyColors.block,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        width: 200,
-                      ),
-                      customButton: SizedBox(
-                        child: Icon(
-                          Icons.keyboard_arrow_down_rounded,
-                          color: MyColors.subtextdark,
-                        ),
-                      ),
-                      isExpanded: true,
-                      hint: Text(
-                        'Select Item',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Theme.of(context).hintColor,
-                        ),
-                      ),
-                      items: map.keys.map((key) {
-                        return DropdownMenuItem<String>(
-                          value: key,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                map[key]['nameCard'],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              Text(
-                                map[key]['numCard'],
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                      value: selectedKey,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedKey = value!;
-                        });
-                      },
-                      buttonStyleData: const ButtonStyleData(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        height: 40,
-                        width: 140,
-                      ),
-                      menuItemStyleData: const MenuItemStyleData(
-                        height: 50,
-                      ),
-                    ),
-                  )
                 ],
               ),
             ],

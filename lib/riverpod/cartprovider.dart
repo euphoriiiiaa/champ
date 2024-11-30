@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:champ/functions/func.dart';
 import 'package:champ/models/cartsupmodel.dart';
+import 'package:champ/models/ordersneakersmodel.dart';
 import 'package:champ/models/sneakercartmodel.dart';
 import 'package:champ/models/sneakermodel.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,6 +20,39 @@ final cartProvider =
 class CartNotifier extends StateNotifier<Map<String, SneakerCartModel>> {
   final Ref ref;
   CartNotifier(this.ref) : super({});
+
+  void clearCart() {
+    state.clear();
+  }
+
+  void repeatCart(int idorder) async {
+    try {
+      var sup = Supabase.instance.client;
+
+      var cartlist =
+          await sup.from('orderSneakers').select().eq('orderid', idorder);
+      var sneakerslist = await Func().getSneakers();
+
+      var list = (cartlist as List)
+          .map((item) => OrderSneakersModel.fromMap(item))
+          .toList();
+      for (var item in list) {
+        var firstsneaker =
+            sneakerslist.firstWhere((item) => item.id == item.id);
+        var image = await Func().getSneakerImage(item.id);
+        SneakerCartModel sneaker = SneakerCartModel(
+            id: item.sneaker,
+            count: item.count,
+            image: image,
+            name: item.sneaker,
+            price: firstsneaker.price);
+        addToCart(sneaker);
+      }
+      Future.delayed(Duration(seconds: 1), () => loadCart());
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 
   void addToCart(SneakerCartModel sneaker) async {
     try {
@@ -69,6 +103,7 @@ class CartNotifier extends StateNotifier<Map<String, SneakerCartModel>> {
           }
         }
       }
+      log('success loaded cart from sup');
     } catch (e) {
       log(e.toString());
     }

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer' as logs;
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
@@ -304,11 +305,90 @@ class Func {
     }
   }
 
+  void clearServerCart() async {
+    try {
+      var sup = Supabase.instance.client;
+
+      await sup
+          .from('cart')
+          .delete()
+          .eq('user', Supabase.instance.client.auth.currentUser!.id);
+      logs.log('success cleared server cart');
+    } catch (e) {
+      logs.log(e.toString());
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getOrders() async {
+    try {
+      var sup = Supabase.instance.client;
+
+      var ordermodel = await sup
+          .from('order')
+          .select()
+          .eq('user', Supabase.instance.client.auth.currentUser!.id);
+      var orders =
+          (ordermodel as List).map((item) => OrderModel.fromMap(item)).toList();
+      orders.sort((a, b) => b.created_at.compareTo(a.created_at));
+      List<Map<String, dynamic>> list = [];
+      for (var item in orders) {
+        list.add({
+          'id': item.id,
+          'created_at': item.created_at,
+          'user': item.user,
+          'sum': item.sum,
+          'address': item.address
+        });
+      }
+
+      logs.log('success list of orders');
+      return list;
+    } catch (e) {
+      logs.log('asdasd ' + e.toString());
+      return [{}];
+    }
+  }
+
+  Future<List<OrderSneakersModel>> getOrderSneakers(int id) async {
+    try {
+      var sup = Supabase.instance.client;
+      logs.log(id.toString());
+      var ordersneakermodel =
+          await sup.from('orderSneakers').select().eq('orderid', id);
+      var ordersneakerlist = (ordersneakermodel as List)
+          .map((item) => OrderSneakersModel.fromMap(item))
+          .toList();
+      List<OrderSneakersModel> newList = [];
+      for (var item in ordersneakerlist) {
+        logs.log(item.toString());
+        var sneakersmodel =
+            await sup.from('sneakers').select().eq('id', item.sneaker);
+        var sneakerr = sneakersmodel.first;
+        var image = await getSneakerImage(item.sneaker);
+        OrderSneakersModel sneaker = OrderSneakersModel(
+            id: item.id,
+            sneaker: item.sneaker,
+            orderid: item.orderid,
+            count: item.count,
+            cost: (sneakerr['price'] as num).toDouble(),
+            sneakername: sneakerr['name'],
+            image: image);
+        newList.add(sneaker);
+      }
+      return newList;
+    } catch (e) {
+      logs.log('errpr: ' + e.toString());
+      return List.empty();
+    }
+  }
+
   Future<bool> createOrder(WidgetRef ref) async {
     try {
       var supabase = GetIt.I.get<SupabaseClient>();
       final cart = ref.watch(cartProvider);
+      final cartNotifier = ref.read(cartProvider.notifier);
       final address = ref.watch(addressProvider);
+      final total = ref.watch(cartTotalProvider);
       var user = Supabase.instance.client.auth.currentUser;
       if (user != null) {
         var orderList = await supabase.from('order').select();
@@ -322,6 +402,8 @@ class Func {
           'id': id,
           'created_at': DateTime.timestamp().toString(),
           'user': user.id,
+          'sum': total,
+          'address': address
         });
 
         var uuid = Uuid();
@@ -329,13 +411,13 @@ class Func {
           await supabase.from('orderSneakers').insert({
             'id': uuid.v4(),
             'sneaker': cart[item]!.id,
-            'order': id,
+            'orderid': id,
             'count': cart[item]!.count,
-            'address': address
           });
         }
         logs.log('successfuly created order');
-        cart.clear();
+        cartNotifier.clearCart();
+        clearServerCart();
         return true;
       }
       return false;

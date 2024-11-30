@@ -5,6 +5,7 @@ import 'package:champ/presentation/colors/mycolors.dart';
 import 'package:champ/presentation/pages/cartpage.dart';
 import 'package:champ/presentation/pages/mainpage.dart';
 import 'package:champ/presentation/pages/mainpageview.dart';
+import 'package:champ/presentation/pages/orderpage.dart';
 import 'package:champ/presentation/textstyle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -165,22 +166,33 @@ class MenuScreen extends StatelessWidget {
                 SizedBox(
                   height: 30,
                 ),
-                Row(
-                  children: [
-                    Image.asset(
-                      'assets/delivery_drawer.png',
-                      width: 22,
-                      color: Colors.white,
-                    ),
-                    SizedBox(
-                      width: 22,
-                    ),
-                    Text(
-                      'Заказы',
-                      textAlign: TextAlign.start,
-                      style: myTextStyle(16, Colors.white, null),
-                    ),
-                  ],
+                GestureDetector(
+                  onTap: () {
+                    ZoomDrawer.of(context)!.close();
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => const OrderPage(),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        'assets/delivery_drawer.png',
+                        width: 22,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 22,
+                      ),
+                      Text(
+                        'Заказы',
+                        textAlign: TextAlign.start,
+                        style: myTextStyle(16, Colors.white, null),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: 30,

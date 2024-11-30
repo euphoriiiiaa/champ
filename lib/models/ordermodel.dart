@@ -5,21 +5,29 @@ class OrderModel {
   final int id;
   final String created_at;
   final String user;
+  final double sum;
+  final String address;
   OrderModel({
     required this.id,
     required this.created_at,
     required this.user,
+    required this.sum,
+    required this.address,
   });
 
   OrderModel copyWith({
     int? id,
     String? created_at,
     String? user,
+    double? sum,
+    String? address,
   }) {
     return OrderModel(
       id: id ?? this.id,
       created_at: created_at ?? this.created_at,
       user: user ?? this.user,
+      sum: sum ?? this.sum,
+      address: address ?? this.address,
     );
   }
 
@@ -28,6 +36,8 @@ class OrderModel {
       'id': id,
       'created_at': created_at,
       'user': user,
+      'sum': sum,
+      'address': address,
     };
   }
 
@@ -36,6 +46,8 @@ class OrderModel {
       id: map['id'] as int,
       created_at: map['created_at'] as String,
       user: map['user'] as String,
+      sum: map['sum'] as double,
+      address: map['address'] as String,
     );
   }
 
@@ -45,8 +57,9 @@ class OrderModel {
       OrderModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() =>
-      'OrderModel(id: $id, created_at: $created_at, user: $user)';
+  String toString() {
+    return 'OrderModel(id: $id, created_at: $created_at, user: $user, sum: $sum, address: $address)';
+  }
 
   @override
   bool operator ==(covariant OrderModel other) {
@@ -54,9 +67,17 @@ class OrderModel {
 
     return other.id == id &&
         other.created_at == created_at &&
-        other.user == user;
+        other.user == user &&
+        other.sum == sum &&
+        other.address == address;
   }
 
   @override
-  int get hashCode => id.hashCode ^ created_at.hashCode ^ user.hashCode;
+  int get hashCode {
+    return id.hashCode ^
+        created_at.hashCode ^
+        user.hashCode ^
+        sum.hashCode ^
+        address.hashCode;
+  }
 }
