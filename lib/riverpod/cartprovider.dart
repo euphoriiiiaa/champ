@@ -48,7 +48,7 @@ class CartNotifier extends StateNotifier<Map<String, SneakerCartModel>> {
             price: firstsneaker.price);
         addToCart(sneaker);
       }
-      Future.delayed(Duration(seconds: 1), () => loadCart());
+      Future.delayed(const Duration(seconds: 1), () => loadCart());
     } catch (e) {
       log(e.toString());
     }
