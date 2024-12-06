@@ -84,7 +84,7 @@ class _OrderPageState extends State<OrderPage> {
                                                     .minute),
                                           ),
                                         )} назад'
-                                      : '${DateTime.parse(orders[index]['created_at']).hour}:${DateTime.parse(orders[index]['created_at']).minute}',
+                                      : ('${DateTime.parse(orders[index]['created_at']).hour}asd:${DateTime.parse(orders[index]['created_at']).minute}'),
                                   orderid: orders[index]['id'])));
                     },
                     child: Column(

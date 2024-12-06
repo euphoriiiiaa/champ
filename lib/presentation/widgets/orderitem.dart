@@ -135,7 +135,13 @@ class _OrderItemState extends ConsumerState<OrderItem> {
                               DateTime.parse(widget.createdat).minute),
                         ),
                       )} назад'
-                    : '${DateTime.parse(widget.createdat).hour}:${DateTime.parse(widget.createdat).minute}',
+                    : (DateTime.parse(widget.createdat)
+                                .minute
+                                .toString()
+                                .length ==
+                            1)
+                        ? '${DateTime.parse(widget.createdat).hour}:0${DateTime.parse(widget.createdat).minute}'
+                        : '${DateTime.parse(widget.createdat).hour}:${DateTime.parse(widget.createdat).minute}',
                 style: myTextStyle(14, MyColors.hint, null),
               ),
             )

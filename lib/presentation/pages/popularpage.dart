@@ -1,8 +1,11 @@
 import 'package:champ/functions/func.dart';
 import 'package:champ/models/sneakermodel.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
+import 'package:champ/presentation/pages/favouritepage.dart';
+import 'package:champ/presentation/pages/mainpageview.dart';
 import 'package:champ/presentation/textstyle.dart';
 import 'package:champ/presentation/widgets/sneakeritem.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,7 +31,12 @@ class _PopularPageState extends State<PopularPage> {
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(30)),
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                  myPageController.nextPage(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut);
+                },
                 icon: SvgPicture.asset(
                   'assets/heart_favourite.svg',
                 ),

@@ -41,10 +41,9 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:uuid/uuid.dart';
 
 class Func {
+  final sup = GetIt.I.get<SupabaseClient>();
   Future<List<CategoryModel>> getCategories() async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
       var list = await sup.from('categories').select();
 
       List<CategoryModel> newList =
@@ -59,7 +58,6 @@ class Func {
 
   void exitFromApp() async {
     if (Supabase.instance.client.auth.currentUser != null) {
-      var sup = GetIt.I.get<SupabaseClient>();
       await sup.auth.signOut();
       Future.delayed(const Duration(milliseconds: 500), exit(0));
     }
@@ -90,14 +88,6 @@ class Func {
     }
 
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
-      var updatedUser = await sup.auth.updateUser(UserAttributes(data: {
-        'name': name,
-        'surname': surname,
-        'address': address,
-        'phoneNumber': phoneNumber
-      }));
       logs.log(
           'success data changed for user ${sup.auth.currentUser!.userMetadata!['name']}');
       Navigator.pop(context, {
@@ -114,9 +104,7 @@ class Func {
   Future<void> markAsReaded(
       NotificationModel notification, WidgetRef ref) async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
-      await sup!
+      await sup
           .from('notifications')
           .update({'readed': true}).eq('id', notification.id);
 
@@ -137,9 +125,7 @@ class Func {
 
   Future<List<NotificationModel>> getNotifications() async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
-      var list = await sup!.from('notifications').select();
+      var list = await sup.from('notifications').select();
 
       List<NotificationModel> newList = (list as List)
           .map((item) => NotificationModel.fromMap(item))
@@ -156,9 +142,7 @@ class Func {
   Future<SneakerCartModel?> getSneakerToCart(
       String id, Uint8List imageFuture) async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
-      var list = await sup!.from('sneakers').select().eq('id', id);
+      var list = await sup.from('sneakers').select().eq('id', id);
 
       SneakerModel sneaker =
           list.map((item) => SneakerModel.fromMap(item)).first;
@@ -179,8 +163,6 @@ class Func {
 
   Future<List<SneakerModel>> getSneakers() async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
       var list = await sup.from('sneakers').select();
 
       List<SneakerModel> newList =
@@ -195,8 +177,6 @@ class Func {
 
   Future<List<DetailModel>> getSneakersForDetail() async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
       var list = await sup.from('sneakers').select();
 
       List<SneakerModel> newList =
@@ -218,8 +198,6 @@ class Func {
 
   Future<bool?> checkIfSneakerFavorite(String sneakerId) async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
       var list = await sup.from('favorites').select().eq('sneaker', sneakerId);
       if (list.isEmpty) {
         return false;
@@ -234,8 +212,6 @@ class Func {
 
   Future<void> unselectFavorite(String sneakerId) async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
       await sup.from('favorites').delete().eq('sneaker', sneakerId);
       logs.log('success delete favorite sneaker');
     } catch (e) {
@@ -245,8 +221,6 @@ class Func {
 
   Future<void> selectFavorite(String sneakerId) async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
       await sup
           .from('favorites')
           .insert({'sneaker': sneakerId, 'user': sup.auth.currentUser!.id});
@@ -258,7 +232,6 @@ class Func {
 
   Future<List<SneakerModel>> getFavoriteSneakers() async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
       if (sup.auth.currentUser != null) {
         var user = sup.auth.currentUser;
         var list = await sup.from('favorites').select().eq('user', user!.id);
@@ -285,7 +258,6 @@ class Func {
   Future<List<SneakerModel>> getSneakersForCategories(
       String nameCategory) async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
       var categoriesmodel = await sup.from('categories').select();
       var categorieslist = (categoriesmodel as List)
           .map((item) => CategoryModel.fromMap(item))
@@ -307,8 +279,6 @@ class Func {
 
   void clearServerCart() async {
     try {
-      var sup = Supabase.instance.client;
-
       await sup
           .from('cart')
           .delete()
@@ -321,8 +291,6 @@ class Func {
 
   Future<List<Map<String, dynamic>>> getOrders() async {
     try {
-      var sup = Supabase.instance.client;
-
       var ordermodel = await sup
           .from('order')
           .select()
@@ -351,7 +319,6 @@ class Func {
 
   Future<List<OrderSneakersModel>> getOrderSneakers(int id) async {
     try {
-      var sup = Supabase.instance.client;
       logs.log(id.toString());
       var ordersneakermodel =
           await sup.from('orderSneakers').select().eq('orderid', id);
@@ -384,21 +351,20 @@ class Func {
 
   Future<bool> createOrder(WidgetRef ref) async {
     try {
-      var supabase = GetIt.I.get<SupabaseClient>();
       final cart = ref.watch(cartProvider);
       final cartNotifier = ref.read(cartProvider.notifier);
       final address = ref.watch(addressProvider);
       final total = ref.watch(cartTotalProvider);
       var user = Supabase.instance.client.auth.currentUser;
       if (user != null) {
-        var orderList = await supabase.from('order').select();
+        var orderList = await sup.from('order').select();
 
         var list = (orderList as List)
             .map((item) => OrderModel.fromMap(item))
             .toList();
         var id = list.length + 1;
 
-        await supabase.from('order').insert({
+        await sup.from('order').insert({
           'id': id,
           'created_at': DateTime.timestamp().toString(),
           'user': user.id,
@@ -406,9 +372,9 @@ class Func {
           'address': address
         });
 
-        var uuid = Uuid();
+        var uuid = const Uuid();
         for (var item in cart.keys) {
-          await supabase.from('orderSneakers').insert({
+          await sup.from('orderSneakers').insert({
             'id': uuid.v4(),
             'sneaker': cart[item]!.id,
             'orderid': id,
@@ -452,7 +418,6 @@ class Func {
   Future<List<SneakerModel>> getSneakersForCategoriesSecond(
       String nameCategory) async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
       var categoriesmodel = await sup.from('categories').select();
       var categorieslist = (categoriesmodel as List)
           .map((item) => CategoryModel.fromMap(item))
@@ -474,9 +439,7 @@ class Func {
 
   Future<List<SneakerModel>> getPopularSneakers() async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
-      var list = await sup!.from('popular').select();
+      var list = await sup.from('popular').select();
 
       List<PopularSneaker> popular =
           (list as List).map((item) => PopularSneaker.fromMap(item)).toList();
@@ -500,9 +463,7 @@ class Func {
 
   Future<List<AdsModel>> getAds() async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
-      var list = await sup!.from('ads').select();
+      var list = await sup.from('ads').select();
 
       List<AdsModel> newList =
           (list as List).map((item) => AdsModel.fromMap(item)).toList();
@@ -516,10 +477,8 @@ class Func {
 
   Future<Uint8List?> getAdImage(String uuid) async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
       final Uint8List file =
-          await sup!.storage.from('ads').download('$uuid.png');
+          await sup.storage.from('ads').download('$uuid.png');
 
       return file;
     } catch (e) {
@@ -529,9 +488,7 @@ class Func {
 
   Future<List<SneakerModel>> getSneakersSort(String nameSneaker) async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
-      var list = await sup!.from('sneakers').select().eq('name', nameSneaker);
+      var list = await sup.from('sneakers').select().eq('name', nameSneaker);
 
       List<SneakerModel> newList =
           (list as List).map((item) => SneakerModel.fromMap(item)).toList();
@@ -545,10 +502,8 @@ class Func {
 
   Future<Uint8List?> getSneakerImage(String uuid) async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
       final Uint8List file =
-          await sup!.storage.from('assets').download('$uuid.png');
+          await sup.storage.from('assets').download('$uuid.png');
 
       return file;
     } catch (e) {
@@ -558,8 +513,6 @@ class Func {
 
   Future<List<Uint8List>?> getAllSneakersImages() async {
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
       List<Uint8List> images = [];
       var sneakers = await sup.from('sneakers').select();
       var list =
@@ -627,9 +580,7 @@ class Func {
 
     email.toLowerCase();
 
-    var sup = GetIt.I.get<SupabaseClient>();
-
-    final AuthResponse res = await sup!.auth.signUp(
+    final AuthResponse res = await sup.auth.signUp(
       email: email,
       password: password,
     );
@@ -738,9 +689,7 @@ class Func {
       return;
     }
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
-      final AuthResponse userSign = await sup!.auth.signInWithPassword(
+      final AuthResponse userSign = await sup.auth.signInWithPassword(
         email: Data.emailUser,
         password: 'dgdfdfd',
       );
@@ -796,9 +745,7 @@ class Func {
     }
 
     try {
-      var sup = GetIt.I.get<SupabaseClient>();
-
-      final AuthResponse res = await sup!.auth.signInWithPassword(
+      final AuthResponse res = await sup.auth.signInWithPassword(
         email: email,
         password: password,
       );
