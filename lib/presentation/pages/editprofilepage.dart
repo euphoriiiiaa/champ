@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:champ/api/kand.dart';
 import 'package:champ/data/data.dart';
 import 'package:champ/functions/func.dart';
@@ -10,7 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 
@@ -25,6 +30,7 @@ TextEditingController name = TextEditingController();
 TextEditingController surname = TextEditingController();
 TextEditingController address = TextEditingController();
 TextEditingController number = TextEditingController();
+Uint8List? _image;
 
 class _EditProfilePageState extends State<EditProfilePage> {
   @override
@@ -39,6 +45,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
           Supabase.instance.client.auth.currentUser!.userMetadata!['address'];
       number.text = Supabase
           .instance.client.auth.currentUser!.userMetadata!['phoneNumber'];
+      Future.microtask(() async {
+        _image = await Func().getImageFromStorage();
+      });
     }
   }
 
@@ -79,24 +88,34 @@ class _EditProfilePageState extends State<EditProfilePage> {
               Align(
                 alignment: Alignment.center,
                 child: ClipOval(
-                  child: Supabase.instance.client.auth.currentUser != null
-                      ? Image.network(
-                          width: 96,
-                          height: 96,
-                          Supabase.instance.client.auth.currentUser!
-                              .userMetadata!['urlAvatar']
-                              .toString(),
-                          fit: BoxFit.cover,
-                        )
-                      : Image.network(
-                          width: 96,
-                          height: 96,
+                  child: FutureBuilder(
+                    future: Func().getImageFromStorage(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (!snapshot.hasData) {
+                        return Image.asset(
                           'assets/avatar.png',
+                          width: 100,
+                          height: 100,
                           fit: BoxFit.cover,
-                        ),
+                        );
+                      } else {
+                        final image = snapshot.data;
+                        return Image.memory(
+                          image!,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        );
+                      }
+                    },
+                  ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Text(
@@ -108,7 +127,39 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 style: myTextStyle(20, MyColors.text, null),
               ),
               GestureDetector(
-                onTap: Kand.getImage,
+                onTap: () async {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text(
+                            'Выберите способ',
+                            style: myTextStyle(
+                                14, MyColors.text, TextDecoration.none),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Func().cameraImage();
+                                Navigator.pop(context);
+                              },
+                              child: Text('Camera'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Func().galleryImage();
+                                Navigator.pop(context);
+                              },
+                              child: Text('Gallery'),
+                            ),
+                            TextButton(
+                              onPressed: () {},
+                              child: Text('Kand'),
+                            ),
+                          ],
+                        );
+                      });
+                },
                 child: Text(
                   'Изменить фото профиля',
                   textAlign: TextAlign.start,
@@ -119,7 +170,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 height: 12,
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  showCupertinoModalPopup(
+                    context: context,
+                    builder: (context) => Center(
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: 100,
+                        width: MediaQuery.of(context).size.width - 100,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: Text(
+                          'UUID: ${Supabase.instance.client.auth.currentUser!.id}',
+                          style: myTextStyle(
+                              16, Colors.black, TextDecoration.none),
+                        ),
+                      ),
+                    ),
+                  );
+                },
                 child: Container(
                   height: 80,
                   width: MediaQuery.of(context).size.width - 50,
@@ -143,8 +214,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         height: 50,
                         child: SfBarcodeGenerator(
                             barColor: Colors.black,
-                            symbology: Code128B(),
-                            value: '123121123233'),
+                            symbology: Code39Extended(module: 2),
+                            value:
+                                Supabase.instance.client.auth.currentUser!.id),
                       ),
                       SizedBox(
                         height: 10,

@@ -74,6 +74,7 @@ dependencies:
   humanize_duration: ^0.0.2
   image_picker: ^1.1.2
   rename_app: ^1.6.1
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:

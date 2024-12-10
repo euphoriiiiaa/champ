@@ -1,4 +1,5 @@
 import 'package:champ/data/data.dart';
+import 'package:champ/functions/func.dart';
 import 'package:champ/presentation/colors/mycolors.dart';
 import 'package:champ/presentation/pages/editprofilepage.dart';
 import 'package:champ/presentation/textstyle.dart';
@@ -27,6 +28,7 @@ TextEditingController address = TextEditingController();
 TextEditingController number = TextEditingController();
 String? nameProfile;
 String uuid = Supabase.instance.client.auth.currentUser!.id;
+Uint8List? _image;
 
 class _ProfilePageState extends State<ProfilePage> {
   @override
@@ -42,6 +44,9 @@ class _ProfilePageState extends State<ProfilePage> {
     number.text =
         Supabase.instance.client.auth.currentUser!.userMetadata!['phoneNumber'];
     nameProfile = name.text;
+    Future.microtask(() async {
+      _image = await Func().getImageFromStorage();
+    });
   }
 
   @override
@@ -57,17 +62,12 @@ class _ProfilePageState extends State<ProfilePage> {
             child: GestureDetector(
                 onTap: () async {
                   final result = await Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) => EditProfilePage()));
-                  if (result != null) {
-                    setState(() {
-                      name.text = result['name'];
-                      surname.text = result['surname'];
-                      address.text = result['address'];
-                      number.text = result['namnumbere'];
-                    });
-                  }
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => EditProfilePage(),
+                    ),
+                  );
+                  setState(() {});
                 },
                 child: Image.asset(
                   'assets/edit_icon.png',
@@ -98,21 +98,31 @@ class _ProfilePageState extends State<ProfilePage> {
               Align(
                 alignment: Alignment.center,
                 child: ClipOval(
-                  child: Supabase.instance.client.auth.currentUser != null
-                      ? Image.network(
-                          width: 96,
-                          height: 96,
-                          Supabase.instance.client.auth.currentUser!
-                              .userMetadata!['urlAvatar']
-                              .toString(),
-                          fit: BoxFit.cover,
-                        )
-                      : Image.network(
-                          width: 96,
-                          height: 96,
+                  child: FutureBuilder(
+                    future: Func().getImageFromStorage(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (!snapshot.hasData) {
+                        return Image.asset(
                           'assets/avatar.png',
+                          width: 100,
+                          height: 100,
                           fit: BoxFit.cover,
-                        ),
+                        );
+                      } else {
+                        final image = snapshot.data;
+                        return Image.memory(
+                          image!,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        );
+                      }
+                    },
+                  ),
                 ),
               ),
               SizedBox(

@@ -33,6 +33,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get_it/get_it.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/yandex.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -60,6 +61,85 @@ class Func {
     if (Supabase.instance.client.auth.currentUser != null) {
       await sup.auth.signOut();
       Future.delayed(const Duration(milliseconds: 500), exit(0));
+    }
+  }
+
+  Future<Uint8List?> getImageFromStorage() async {
+    var file = await sup.storage
+        .from('users')
+        .download('${Supabase.instance.client.auth.currentUser!.id}.jpg');
+    logs.log('downloading');
+    if (file.isEmpty) {
+      return null;
+    } else {
+      logs.log('downloaded file');
+      return file;
+    }
+  }
+
+  Future<void> makeAndLoadImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? photo = await picker.pickImage(source: ImageSource.camera);
+    if (photo != null) {
+      try {
+        var sup = GetIt.I.get<SupabaseClient>();
+        await sup.storage.from('users').upload(
+              '${Supabase.instance.client.auth.currentUser!.id}.jpg',
+              File(photo.path),
+            );
+        logs.log('success upload');
+      } catch (e) {
+        var sup = GetIt.I.get<SupabaseClient>();
+        await sup.storage.from('users').update(
+              '${Supabase.instance.client.auth.currentUser!.id}.jpg',
+              File(photo.path),
+            );
+        logs.log('reupload and error $e');
+      }
+    }
+  }
+
+  Future<void> galleryImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? photo = await picker.pickImage(source: ImageSource.gallery);
+    if (photo != null) {
+      try {
+        var sup = GetIt.I.get<SupabaseClient>();
+        await sup.storage.from('users').upload(
+              '${Supabase.instance.client.auth.currentUser!.id}.jpg',
+              File(photo.path),
+            );
+        logs.log('success upload');
+      } catch (e) {
+        var sup = GetIt.I.get<SupabaseClient>();
+        await sup.storage.from('users').update(
+              '${Supabase.instance.client.auth.currentUser!.id}.jpg',
+              File(photo.path),
+            );
+        logs.log('reupload and error $e');
+      }
+    }
+  }
+
+  Future<void> cameraImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? photo = await picker.pickImage(source: ImageSource.camera);
+    if (photo != null) {
+      try {
+        var sup = GetIt.I.get<SupabaseClient>();
+        await sup.storage.from('users').upload(
+              '${Supabase.instance.client.auth.currentUser!.id}.jpg',
+              File(photo.path),
+            );
+        logs.log('success upload');
+      } catch (e) {
+        var sup = GetIt.I.get<SupabaseClient>();
+        await sup.storage.from('users').update(
+              '${Supabase.instance.client.auth.currentUser!.id}.jpg',
+              File(photo.path),
+            );
+        logs.log('reupload and error $e');
+      }
     }
   }
 

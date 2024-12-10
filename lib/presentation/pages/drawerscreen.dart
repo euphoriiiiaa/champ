@@ -24,6 +24,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
   @override
   Widget build(BuildContext context) {
     return ZoomDrawer(
+      boxShadow: [
+        BoxShadow(blurRadius: 20, color: Colors.black.withOpacity(0.5)),
+      ],
       slideWidth: 300,
       mainScreenScale: 0.4,
       angle: -3,
